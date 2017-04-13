@@ -1,0 +1,40 @@
+{
+    "name": "lezhnev74/ema",
+    "description": "External memory app - allows one to quickly post and search text notes",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitriy Lezhnev",
+            "email": "lezhnev.work@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.1",
+        "beberlei/assert": "^2.7",
+        "nesbot/carbon": "^1.22",
+        "ramsey/uuid": "^3.6",
+        "doctrine/collections": "^1.4",
+        "voku/portable-utf8": "^3.1",
+        "php-di/php-di": "^5.4",
+        "vlucas/phpdotenv": "^2.4",
+        "hassankhan/config": "^0.10.0",
+        "doctrine/cache": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "EMA\\Domain\\": "src/Domain/",
+            "EMA\\App\\": "src/App/",
+            "EMA\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.1",
+        "lezhnev74/ddd-generator": "^0.0.4",
+        "fzaninotto/faker": "^1.6"
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
