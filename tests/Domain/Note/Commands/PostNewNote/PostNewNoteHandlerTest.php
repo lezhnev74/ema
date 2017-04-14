@@ -23,7 +23,7 @@ class PostNewNoteHandlerTest extends TestCase
         
         // 1. command
         $command = new PostNewNote($text, $id, $owner_id);
-        
+    
         // 2. handle command directly
         $handler = container()->get(PostNewNoteHandler::class);
         $handler->__invoke($command);

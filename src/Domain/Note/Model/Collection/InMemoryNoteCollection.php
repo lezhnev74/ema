@@ -25,7 +25,7 @@ final class InMemoryNoteCollection implements NoteCollection
     
     public function all($page = 1, $on_page = 100): Collection
     {
-        return $this->collection->slice($on_page * ($page - 1), $on_page);
+        return new ArrayCollection($this->collection->slice($on_page * ($page - 1), $on_page));
     }
     
     public function findById(Identity $id): Note

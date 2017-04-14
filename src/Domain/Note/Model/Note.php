@@ -15,33 +15,38 @@ final class Note extends AggregateRoot
     private $posted_at;
     /** @var  Carbon */
     private $modified_at;
+    /** @var  Identity */
+    private $owner_id;
     
     /**
      * Note constructor.
      *
      * @param Identity $id
      * @param string   $text
+     * @param Identity $owner_id
      */
-    public function __construct(Identity $id, $text)
+    private function __construct(Identity $id, string $text, Identity $owner_id)
     {
         $this->id          = $id;
         $this->text        = $text;
         $this->posted_at   = Carbon::now();
         $this->modified_at = null;
+        $this->owner_id    = $owner_id;
     }
     
     /**
-     * post
+     * make
      *
      *
      * @param Identity $id
      * @param string   $text
+     * @param Identity $owner_id
      *
      * @return Note
      */
-    static public function post(Identity $id, string $text): self
+    static public function make(Identity $id, string $text, Identity $owner_id): self
     {
-        return new Note($id, $text);
+        return new static($id, $text, $owner_id);
     }
     
     public function modify(Identity $id, string $text): void
@@ -72,6 +77,14 @@ final class Note extends AggregateRoot
     public function getModifiedAt(): Carbon
     {
         return $this->modified_at;
+    }
+    
+    /**
+     * @return Identity
+     */
+    public function getOwnerId(): Identity
+    {
+        return $this->owner_id;
     }
     
     

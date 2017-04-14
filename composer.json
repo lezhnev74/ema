@@ -19,8 +19,8 @@
         "voku/portable-utf8": "^3.1",
         "php-di/php-di": "^5.4",
         "vlucas/phpdotenv": "^2.4",
-        "hassankhan/config": "^0.10.0",
-        "doctrine/cache": "^1.6"
+        "doctrine/cache": "^1.6",
+        "lezhnev74/dummy-config-loader": "^1.0"
     },
     "autoload": {
         "psr-4": {

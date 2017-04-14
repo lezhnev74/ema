@@ -1,7 +1,6 @@
 <?php
-use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ApcuCache;
-use Noodlehaus\Config;
+use DummyConfigLoader\Config;
 use Psr\Container\ContainerInterface;
 use voku\helper\UTF8;
 
@@ -38,7 +37,7 @@ if (!function_exists('env')) {
         static $dotenv = null;
         if (!$dotenv) {
             $dotenv = new Dotenv\Dotenv(__DIR__ . "/../");
-            $dotenv->overload();
+            $dotenv->load();
         }
         
         $value = getenv($key);
@@ -102,10 +101,14 @@ if (!function_exists('container')) {
             $builder->useAnnotations(false);
             
             $env = config('app.env');
-            $builder->addDefinitions(config('container_factories'));
-            $builder->addDefinitions("config." . $env . ".php");
+            $builder->addDefinitions(config('factory'));
+            try {
+                $builder->addDefinitions(config('factory_' . $env));
+            } catch (\Exception $e) {
+                // config is not available for current environment
+            }
             
-            if($env == "production") {
+            if ($env == "production") {
                 $builder->setDefinitionCache(new ApcuCache());
             }
             

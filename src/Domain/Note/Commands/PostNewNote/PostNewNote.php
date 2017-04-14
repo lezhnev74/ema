@@ -25,11 +25,13 @@ class PostNewNote implements Command
      * @param Identity $id
      * @param Identity $owner_id
      */
-    public function __construct($text, Identity $id, Identity $owner_id)
+    public function __construct(string $text, Identity $id, Identity $owner_id)
     {
         $this->text     = $text;
         $this->id       = $id;
         $this->owner_id = $owner_id;
+        
+        Assert::that($text)->maxLength(10000);
     }
     
     /**

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1438b05a3f84616d3c7a189b18a1310a",
+    "content-hash": "6d0125f7122ed087f1e534f75a2dc829",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -230,63 +230,6 @@
             "time": "2017-01-03T10:49:41+00:00"
         },
         {
-            "name": "hassankhan/config",
-            "version": "0.10.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hassankhan/config.git",
-                "reference": "06ac500348af033f1a2e44dc357ca86282626d4a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hassankhan/config/zipball/06ac500348af033f1a2e44dc357ca86282626d4a",
-                "reference": "06ac500348af033f1a2e44dc357ca86282626d4a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "scrutinizer/ocular": "~1.1",
-                "squizlabs/php_codesniffer": "~2.2"
-            },
-            "suggest": {
-                "symfony/yaml": "~2.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Noodlehaus\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hassan Khan",
-                    "homepage": "http://hassankhan.me/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Lightweight configuration file loader that supports PHP, INI, XML, JSON, and YAML files",
-            "homepage": "http://hassankhan.me/config/",
-            "keywords": [
-                "config",
-                "configuration",
-                "ini",
-                "json",
-                "microphp",
-                "unframework",
-                "xml",
-                "yaml",
-                "yml"
-            ],
-            "time": "2016-02-11T16:21:17+00:00"
-        },
-        {
             "name": "ircmaxell/password-compat",
             "version": "v1.0.4",
             "source": {
@@ -327,6 +270,45 @@
                 "password"
             ],
             "time": "2014-11-20T16:49:30+00:00"
+        },
+        {
+            "name": "lezhnev74/dummy-config-loader",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lezhnev74/dummy-config-loader.git",
+                "reference": "989b295243ee271d3dca6e11081d10a5f227bb93"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lezhnev74/dummy-config-loader/zipball/989b295243ee271d3dca6e11081d10a5f227bb93",
+                "reference": "989b295243ee271d3dca6e11081d10a5f227bb93",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.1"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "DummyConfigLoader\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitriy Lezhnev",
+                    "email": "lezhnev.work@gmail.com"
+                }
+            ],
+            "description": "This file allows me to lazy load config files and access entries with dot syntax: `database.default.driver`",
+            "time": "2017-04-14T05:44:24+00:00"
         },
         {
             "name": "nesbot/carbon",

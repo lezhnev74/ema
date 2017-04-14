@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace EMA\Domain\Note\Commands\PostNewNote;
 
 use EMA\Domain\Note\Model\Collection\NoteCollection;
+use EMA\Domain\Note\Model\Note;
 
 class PostNewNoteHandler
 {
@@ -19,7 +20,8 @@ class PostNewNoteHandler
     
     function __invoke(PostNewNote $command): void
     {
-    
+        $note = Note::make($command->getId(), $command->getText(), $command->getOwnerId());
+        $this->collection->save($note);
     }
     
 }
