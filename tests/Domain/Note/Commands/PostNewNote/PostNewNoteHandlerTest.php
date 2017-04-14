@@ -7,10 +7,11 @@ use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Commands\PostNewNote\PostNewNote;
 use EMA\Domain\Note\Commands\PostNewNote\PostNewNoteHandler;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
+use EMA\Domain\Note\Model\VO\NoteText;
+use EMA\Tests\BaseTest;
 use Faker\Factory;
-use PHPUnit\Framework\TestCase;
 
-class PostNewNoteHandlerTest extends TestCase
+class PostNewNoteHandlerTest extends BaseTest
 {
     
     function test_public_api()
@@ -19,7 +20,7 @@ class PostNewNoteHandlerTest extends TestCase
         $faker    = Factory::create();
         $id       = new Identity();
         $owner_id = new Identity();
-        $text     = $faker->text;
+        $text     = new NoteText($faker->text);
         
         // 1. command
         $command = new PostNewNote($text, $id, $owner_id);

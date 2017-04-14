@@ -6,10 +6,11 @@ namespace EMA\Domain\Note\Model;
 use Carbon\Carbon;
 use EMA\Domain\Foundation\AggregateRoot;
 use EMA\Domain\Foundation\VO\Identity;
+use EMA\Domain\Note\Model\VO\NoteText;
 
 final class Note extends AggregateRoot
 {
-    /** @var  string */
+    /** @var  NoteText */
     private $text;
     /** @var  Carbon */
     private $posted_at;
@@ -22,10 +23,10 @@ final class Note extends AggregateRoot
      * Note constructor.
      *
      * @param Identity $id
-     * @param string   $text
+     * @param NoteText $text
      * @param Identity $owner_id
      */
-    private function __construct(Identity $id, string $text, Identity $owner_id)
+    public function __construct(Identity $id, NoteText $text, Identity $owner_id)
     {
         $this->id          = $id;
         $this->text        = $text;
@@ -39,26 +40,35 @@ final class Note extends AggregateRoot
      *
      *
      * @param Identity $id
-     * @param string   $text
+     * @param NoteText $text
      * @param Identity $owner_id
      *
      * @return Note
      */
-    static public function make(Identity $id, string $text, Identity $owner_id): self
+    static public function make(Identity $id, NoteText $text, Identity $owner_id): self
     {
         return new static($id, $text, $owner_id);
     }
     
-    public function modify(Identity $id, string $text): void
+    
+    /**
+     * modify
+     *
+     *
+     * @param NoteText $text
+     *
+     * @return void
+     */
+    public function modify(NoteText $text): void
     {
         $this->text        = $text;
         $this->modified_at = Carbon::now();
     }
     
     /**
-     * @return string
+     * @return NoteText
      */
-    public function getText(): string
+    public function getText(): NoteText
     {
         return $this->text;
     }
@@ -72,9 +82,9 @@ final class Note extends AggregateRoot
     }
     
     /**
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function getModifiedAt(): Carbon
+    public function getModifiedAt()
     {
         return $this->modified_at;
     }

@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace EMA\Domain\Foundation\Command;
 
 
-interface Authorizer
+abstract class Authorizer
 {
-    public function denied(): bool;
+    public function denied(): bool
+    {
+        return true; // default, whould be reloaded in actual class
+    }
 }

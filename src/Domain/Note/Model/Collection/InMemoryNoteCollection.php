@@ -5,6 +5,7 @@ namespace EMA\Domain\Note\Model\Collection;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use EMA\Domain\Foundation\Exception\ModelNotFound;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\Note;
 
@@ -30,8 +31,8 @@ final class InMemoryNoteCollection implements NoteCollection
     
     public function findById(Identity $id): Note
     {
-        if (!$this->collection->contains($id->getAsString())) {
-            throw new \Exception();
+        if (!$this->collection->containsKey($id->getAsString())) {
+            throw new ModelNotFound();
         }
         
         return $this->collection->get($id->getAsString());
@@ -47,4 +48,13 @@ final class InMemoryNoteCollection implements NoteCollection
         $this->collection->remove($id->getAsString());
     }
     
+    /**
+     * wipe all the data out
+     *
+     *
+     * @return void
+     */
+    public function wipe(): void {
+        $this->collection = new ArrayCollection();
+    }
 }

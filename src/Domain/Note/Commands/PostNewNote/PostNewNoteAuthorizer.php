@@ -5,12 +5,7 @@ namespace EMA\Domain\Note\Commands\PostNewNote;
 
 use EMA\Domain\Foundation\Command\Authorizer;
 
-class PostNewNoteAuthorizer implements Authorizer
+class PostNewNoteAuthorizer extends Authorizer
 {
-    
-    public function denied(): bool
-    {
-        return false; // any user can post notes
-    }
-    
+
 }
