@@ -14,12 +14,6 @@ use Faker\Factory;
 
 class DeleteNoteHandlerTest extends BaseTest
 {
-    protected function setUp()
-    {
-        parent::setUp();
-        container()->get(NoteCollection::class)->wipe();
-    }
-    
     
     function test_it_deletes_note()
     {

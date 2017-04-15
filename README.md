@@ -17,6 +17,15 @@ After opening the app page, one have few key options:
  * `s` - focus on **s**earch panel 
  * `a` - **a**dd new note
  
+## Installation
+First of all configure your database connection within `config/database.php`
+Then fill the database up:
+```
+cd <project root>
+php migrations/doctrine.php migrations:migrate
+```
+
+
 
 
 

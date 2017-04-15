@@ -2,9 +2,12 @@
 use DirectRouter\DirectRouter;
 use Doctrine\Common\Cache\ApcuCache;
 use DummyConfigLoader\Config;
+use EMA\Domain\Note\Model\VO\NoteText;
 use Prooph\ServiceBus\CommandBus;
 use Prooph\ServiceBus\Plugin\InvokeStrategy\HandleCommandStrategy;
+use Prooph\ServiceBus\Plugin\ServiceLocatorPlugin;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Translation\Tests\StringClass;
 use voku\helper\UTF8;
 
 if (!function_exists('value')) {
@@ -94,12 +97,13 @@ if (!function_exists('storage_path')) {
 
 
 if (!function_exists('container')) {
-    function container(): ContainerInterface
+    function container(bool $restart = false): ContainerInterface
     {
         static $container = null;
         
-        if (is_null($container)) {
-            $builder = new \DI\ContainerBuilder();
+        if (is_null($container) || $restart) {
+            $container = null;
+            $builder   = new \DI\ContainerBuilder();
             $builder->useAutowiring(true);
             $builder->useAnnotations(false);
             
@@ -116,6 +120,7 @@ if (!function_exists('container')) {
             }
             
             $container = $builder->build();
+            
         }
         
         return $container;
@@ -125,17 +130,6 @@ if (!function_exists('container')) {
 if (!function_exists('command_bus')) {
     function command_bus(): CommandBus
     {
-        static $bus = null;
-        
-        if (is_null($bus)) {
-            $bus    = new CommandBus();
-            
-            // Implicit same namesapce router
-            $router = new DirectRouter(container());
-            $router->attachToMessageBus($bus);
-
-        }
-        
-        return $bus;
+        return container()->get(CommandBus::class);
     }
 }

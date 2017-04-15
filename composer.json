@@ -22,19 +22,23 @@
         "doctrine/cache": "^1.6",
         "lezhnev74/dummy-config-loader": "^1.0",
         "prooph/service-bus": "^6.0",
-        "lezhnev74/prooph-direct-router": "^1.0"
+        "lezhnev74/prooph-direct-router": "^1.0",
+        "doctrine/dbal": "^2.5",
+        "doctrine/migrations": "^1.5"
     },
     "autoload": {
         "psr-4": {
             "EMA\\Domain\\": "src/Domain/",
             "EMA\\App\\": "src/App/",
+            "EMA\\Infrastructure\\": "src/Infrastructure/",
             "EMA\\Tests\\": "tests/"
         }
     },
     "require-dev": {
         "phpunit/phpunit": "^6.1",
         "lezhnev74/ddd-generator": "^0.0.4",
-        "fzaninotto/faker": "^1.6"
+        "fzaninotto/faker": "^1.6",
+        "symfony/var-dumper": "^3.2"
     },
     "config": {
         "bin-dir": "bin"
