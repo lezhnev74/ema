@@ -4,6 +4,7 @@ use Doctrine\Common\Cache\ApcuCache;
 use DummyConfigLoader\Config;
 use EMA\Domain\Note\Model\VO\NoteText;
 use Prooph\ServiceBus\CommandBus;
+use Prooph\ServiceBus\EventBus;
 use Prooph\ServiceBus\Plugin\InvokeStrategy\HandleCommandStrategy;
 use Prooph\ServiceBus\Plugin\ServiceLocatorPlugin;
 use Psr\Container\ContainerInterface;
@@ -131,5 +132,12 @@ if (!function_exists('command_bus')) {
     function command_bus(): CommandBus
     {
         return container()->get(CommandBus::class);
+    }
+}
+
+if (!function_exists('event_bus')) {
+    function event_bus(): EventBus
+    {
+        return container()->get(EventBus::class);
     }
 }

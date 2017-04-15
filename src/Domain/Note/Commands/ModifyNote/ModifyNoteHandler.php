@@ -25,6 +25,9 @@ class ModifyNoteHandler
         $note->modify($command->getText());
         
         $this->collection->save($note);
+    
+        // Fire domain events
+        array_map([event_bus(), 'dispatch'], $note->pullDomainEvents());
     }
     
 }

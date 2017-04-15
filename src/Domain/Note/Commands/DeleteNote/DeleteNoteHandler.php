@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace EMA\Domain\Note\Commands\DeleteNote;
 
+use EMA\Domain\Foundation\Event\DomainEvent;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 
 class DeleteNoteHandler
@@ -23,6 +24,9 @@ class DeleteNoteHandler
         $note = $this->collection->findById($command->getId());
         $note->delete();
         $this->collection->delete($command->getId());
+        
+        // Fire domain events
+        array_map([event_bus(), 'dispatch'], $note->pullDomainEvents());
     }
     
 }

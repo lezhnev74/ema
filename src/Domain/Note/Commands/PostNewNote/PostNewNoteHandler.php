@@ -22,6 +22,9 @@ class PostNewNoteHandler
     {
         $note = Note::make($command->getId(), $command->getText(), $command->getOwnerId());
         $this->collection->save($note);
+    
+        // Fire domain events
+        array_map([event_bus(), 'dispatch'], $note->pullDomainEvents());
     }
     
 }
