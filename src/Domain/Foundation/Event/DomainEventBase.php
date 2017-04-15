@@ -14,6 +14,8 @@ abstract class DomainEventBase implements DomainEvent
     private $fired_at;
     /** @var  array */
     private $payload;
+    /** @var  int */
+    private $version;
     
     /**
      * DomainEvent constructor.
@@ -21,11 +23,12 @@ abstract class DomainEventBase implements DomainEvent
      * @param Identity $aggregate_id
      * @param array    $payload
      */
-    public function __construct(Identity $aggregate_id, array $payload = [])
+    public function __construct(Identity $aggregate_id, array $payload = [], $version = 1)
     {
         $this->aggregate_id = $aggregate_id;
         $this->payload      = $payload;
         $this->fired_at     = Carbon::now();
+        $this->version      = $version;
     }
     
     /**
@@ -50,6 +53,11 @@ abstract class DomainEventBase implements DomainEvent
     public function getPayload(): array
     {
         return $this->payload;
+    }
+    
+    public function getVersion(): int
+    {
+        return $this->version;
     }
     
 }

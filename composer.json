@@ -20,7 +20,9 @@
         "php-di/php-di": "^5.4",
         "vlucas/phpdotenv": "^2.4",
         "doctrine/cache": "^1.6",
-        "lezhnev74/dummy-config-loader": "^1.0"
+        "lezhnev74/dummy-config-loader": "^1.0",
+        "prooph/service-bus": "^6.0",
+        "lezhnev74/prooph-direct-router": "^1.0"
     },
     "autoload": {
         "psr-4": {

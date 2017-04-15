@@ -20,6 +20,8 @@ class DeleteNoteHandler
     
     function __invoke(DeleteNote $command): void
     {
+        $note = $this->collection->findById($command->getId());
+        $note->delete();
         $this->collection->delete($command->getId());
     }
     

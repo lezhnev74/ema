@@ -6,6 +6,9 @@ namespace EMA\Tests\Domain\Note\Model\VO;
 use Assert\InvalidArgumentException;
 use Carbon\Carbon;
 use EMA\Domain\Foundation\VO\Identity;
+use EMA\Domain\Note\Events\NoteDeleted;
+use EMA\Domain\Note\Events\NoteModified;
+use EMA\Domain\Note\Events\NotePosted;
 use EMA\Domain\Note\Model\Note;
 use EMA\Domain\Note\Model\VO\NoteText;
 use EMA\Tests\BaseTest;
@@ -28,6 +31,29 @@ final class NoteTest extends BaseTest
         $this->assertEquals($text, $note->getText());
         $this->assertEquals(Carbon::now(), $note->getPostedAt());
         $this->assertNull($note->getModifiedAt());
+    }
+    
+    function test_it_fires_domain_events()
+    {
+        Carbon::setTestNow();
+        
+        $faker    = Factory::create();
+        $id       = new Identity();
+        $owner_id = new Identity();
+        $text     = new NoteText($faker->text());
+        
+        // 1. Make new note
+        $note = Note::make($id, $text, $owner_id);
+        $this->assertEquals(NotePosted::class, get_class($note->pullDomainEvents()[0]));
+        
+        // 2. Modify  note
+        $note->modify($text);
+        $this->assertEquals(NoteModified::class, get_class($note->pullDomainEvents()[0]));
+    
+        // 3. Delete  note
+        $note->delete();
+        $this->assertEquals(NoteDeleted::class, get_class($note->pullDomainEvents()[0]));
+        
     }
     
 }

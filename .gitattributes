@@ -1,0 +1,5 @@
+./tests export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+_ide_helper.php export-ignore
+./ddd-gen export-ignore

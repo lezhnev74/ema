@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d0125f7122ed087f1e534f75a2dc829",
+    "content-hash": "0f19f268834331d7485ea91bc420f025",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -311,6 +311,48 @@
             "time": "2017-04-14T05:44:24+00:00"
         },
         {
+            "name": "lezhnev74/prooph-direct-router",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lezhnev74/prooph-direct-router.git",
+                "reference": "843025dd98a06c8c8cb4d1372134d098362ce03a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lezhnev74/prooph-direct-router/zipball/843025dd98a06c8c8cb4d1372134d098362ce03a",
+                "reference": "843025dd98a06c8c8cb4d1372134d098362ce03a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "prooph/service-bus": "^6.0",
+                "psr/container": "^1.0"
+            },
+            "require-dev": {
+                "php-di/php-di": "^5.4",
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DirectRouter\\": "src/",
+                    "DirectRouterTests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitriy Lezhnev",
+                    "email": "lezhnev.work@gmail.com"
+                }
+            ],
+            "time": "2017-04-15T08:41:51+00:00"
+        },
+        {
             "name": "nesbot/carbon",
             "version": "1.22.1",
             "source": {
@@ -552,6 +594,137 @@
                 "reflection"
             ],
             "time": "2015-11-29T10:34:25+00:00"
+        },
+        {
+            "name": "prooph/common",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/prooph/common.git",
+                "reference": "51233fe960b2249f7e94ea84851d2d13d00a5997"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/prooph/common/zipball/51233fe960b2249f7e94ea84851d2d13d00a5997",
+                "reference": "51233fe960b2249f7e94ea84851d2d13d00a5997",
+                "shasum": ""
+            },
+            "require": {
+                "beberlei/assert": "^2.7.1",
+                "php": "^7.1.0",
+                "ramsey/uuid": "^3.5.1"
+            },
+            "require-dev": {
+                "malukenho/docheader": "^0.1.4",
+                "phpunit/phpunit": "^6.0",
+                "prooph/bookdown-template": "^0.2.3",
+                "prooph/php-cs-fixer-config": "^0.1.1",
+                "satooshi/php-coveralls": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Prooph\\Common\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sascha-Oliver Prolic",
+                    "email": "saschaprolic@googlemail.com"
+                },
+                {
+                    "name": "Alexander Miertsch",
+                    "email": "contact@prooph.de",
+                    "homepage": "http://www.prooph.de"
+                }
+            ],
+            "description": "Common classes used across prooph packages",
+            "homepage": "http://getprooph.org/",
+            "keywords": [
+                "common",
+                "prooph"
+            ],
+            "time": "2017-02-10T08:24:11+00:00"
+        },
+        {
+            "name": "prooph/service-bus",
+            "version": "v6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/prooph/service-bus.git",
+                "reference": "7589dcffa16783c73758d2727720eca4d1b823ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/prooph/service-bus/zipball/7589dcffa16783c73758d2727720eca4d1b823ab",
+                "reference": "7589dcffa16783c73758d2727720eca4d1b823ab",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "prooph/common": "^4.0.0"
+            },
+            "conflict": {
+                "sandrokeil/interop-config": "<2.0.1"
+            },
+            "require-dev": {
+                "malukenho/docheader": "^0.1.4",
+                "phpspec/prophecy": "dev-patch-1 as 1.6.2",
+                "phpunit/phpunit": "^6.0",
+                "prooph/bookdown-template": "^0.2.3",
+                "prooph/php-cs-fixer-config": "^0.1.1",
+                "psr/container": "^1.0",
+                "react/promise": "^2.4.1",
+                "sandrokeil/interop-config": "^2.0.1",
+                "satooshi/php-coveralls": "^1.0"
+            },
+            "suggest": {
+                "prooph/event-store-bus-bridge": "Let the EventBus dispatch persisted DomainEvents",
+                "prooph/service-bus-zfc-rbac-bridge": "Use ZfcRbac as authorization service for route and finalize guard",
+                "psr/container": "^1.0 for usage of provided factories",
+                "react/promise": "^2.4.1 for usage with provided QueryBus",
+                "sandrokeil/interop-config": "For usage of provided factories",
+                "zendframework/zend-servicemanager": "Use Zend ServiceManager to lazy load your handlers and listeners"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "6.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Prooph\\ServiceBus\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sascha-Oliver Prolic",
+                    "email": "saschaprolic@googlemail.com"
+                },
+                {
+                    "name": "Alexander Miertsch",
+                    "email": "contact@prooph.de",
+                    "homepage": "http://www.prooph.de"
+                }
+            ],
+            "description": "PHP Enterprise Service Bus Implementation supporting CQRS and DDD",
+            "homepage": "http://getprooph.org/",
+            "keywords": [
+                "cqrs",
+                "ddd",
+                "messaging",
+                "prooph"
+            ],
+            "time": "2017-02-16T13:56:49+00:00"
         },
         {
             "name": "psr/container",

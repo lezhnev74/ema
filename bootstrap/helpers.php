@@ -1,6 +1,8 @@
 <?php
+use DirectRouter\DirectRouter;
 use Doctrine\Common\Cache\ApcuCache;
 use DummyConfigLoader\Config;
+use Prooph\ServiceBus\CommandBus;
 use Psr\Container\ContainerInterface;
 use voku\helper\UTF8;
 
@@ -116,5 +118,20 @@ if (!function_exists('container')) {
         }
         
         return $container;
+    }
+}
+
+if (!function_exists('command_bus')) {
+    function command_bus(): CommandBus
+    {
+        static $bus = null;
+        
+        if (is_null($bus)) {
+            $bus    = new CommandBus();
+            $router = new DirectRouter(container());
+            $router->attachToMessageBus($bus);
+        }
+        
+        return $bus;
     }
 }

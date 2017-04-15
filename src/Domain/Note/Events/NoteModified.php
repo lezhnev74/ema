@@ -5,8 +5,7 @@ namespace EMA\Domain\Note\Events;
 
 use EMA\Domain\Foundation\Event\DomainEventBase;
 
-final class NotePosted extends DomainEventBase
+final class NoteModified extends DomainEventBase
 {
-    //
+    
 }
-

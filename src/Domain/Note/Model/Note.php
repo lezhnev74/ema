@@ -6,6 +6,9 @@ namespace EMA\Domain\Note\Model;
 use Carbon\Carbon;
 use EMA\Domain\Foundation\AggregateRoot;
 use EMA\Domain\Foundation\VO\Identity;
+use EMA\Domain\Note\Events\NoteDeleted;
+use EMA\Domain\Note\Events\NoteModified;
+use EMA\Domain\Note\Events\NotePosted;
 use EMA\Domain\Note\Model\VO\NoteText;
 
 final class Note extends AggregateRoot
@@ -36,7 +39,7 @@ final class Note extends AggregateRoot
     }
     
     /**
-     * make
+     * make a note
      *
      *
      * @param Identity $id
@@ -47,7 +50,10 @@ final class Note extends AggregateRoot
      */
     static public function make(Identity $id, NoteText $text, Identity $owner_id): self
     {
-        return new static($id, $text, $owner_id);
+        $model = new static($id, $text, $owner_id);
+        $model->apply(new NotePosted($id));
+        
+        return $model;
     }
     
     
@@ -63,6 +69,19 @@ final class Note extends AggregateRoot
     {
         $this->text        = $text;
         $this->modified_at = Carbon::now();
+        
+        $this->apply(new NoteModified($this->getId()));
+    }
+    
+    /**
+     * Delete
+     *
+     *
+     * @return void
+     */
+    public function delete(): void
+    {
+        $this->apply(new NoteDeleted($this->getId()));
     }
     
     /**

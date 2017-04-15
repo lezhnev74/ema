@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace EMA\Domain\Note\Events;
 
-final class NoteDeleted
+use EMA\Domain\Foundation\Event\DomainEventBase;
+
+final class NoteDeleted extends DomainEventBase
 {
     
 }
