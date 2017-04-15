@@ -3,6 +3,7 @@ use DirectRouter\DirectRouter;
 use Doctrine\Common\Cache\ApcuCache;
 use DummyConfigLoader\Config;
 use Prooph\ServiceBus\CommandBus;
+use Prooph\ServiceBus\Plugin\InvokeStrategy\HandleCommandStrategy;
 use Psr\Container\ContainerInterface;
 use voku\helper\UTF8;
 
@@ -128,8 +129,11 @@ if (!function_exists('command_bus')) {
         
         if (is_null($bus)) {
             $bus    = new CommandBus();
+            
+            // Implicit same namesapce router
             $router = new DirectRouter(container());
             $router->attachToMessageBus($bus);
+
         }
         
         return $bus;

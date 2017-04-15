@@ -312,16 +312,16 @@
         },
         {
             "name": "lezhnev74/prooph-direct-router",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lezhnev74/prooph-direct-router.git",
-                "reference": "843025dd98a06c8c8cb4d1372134d098362ce03a"
+                "reference": "14358ad80913428b2256d3a8c806dc0bd300d2a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lezhnev74/prooph-direct-router/zipball/843025dd98a06c8c8cb4d1372134d098362ce03a",
-                "reference": "843025dd98a06c8c8cb4d1372134d098362ce03a",
+                "url": "https://api.github.com/repos/lezhnev74/prooph-direct-router/zipball/14358ad80913428b2256d3a8c806dc0bd300d2a7",
+                "reference": "14358ad80913428b2256d3a8c806dc0bd300d2a7",
                 "shasum": ""
             },
             "require": {
@@ -350,7 +350,7 @@
                     "email": "lezhnev.work@gmail.com"
                 }
             ],
-            "time": "2017-04-15T08:41:51+00:00"
+            "time": "2017-04-15T09:35:13+00:00"
         },
         {
             "name": "nesbot/carbon",
