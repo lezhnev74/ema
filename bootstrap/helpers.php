@@ -141,3 +141,4 @@ if (!function_exists('event_bus')) {
         return container()->get(EventBus::class);
     }
 }
+

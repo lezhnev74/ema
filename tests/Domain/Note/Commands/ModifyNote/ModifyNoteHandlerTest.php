@@ -7,6 +7,7 @@ use EMA\Domain\Foundation\Exception\ModelNotFound;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Commands\ModifyNote\ModifyNote;
 use EMA\Domain\Note\Commands\ModifyNote\ModifyNoteHandler;
+use EMA\Domain\Note\Events\NoteModified;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Domain\Note\Model\Note;
 use EMA\Domain\Note\Model\VO\NoteText;
@@ -19,6 +20,9 @@ class ModifyNoteHandlerTest extends BaseTest
     {
         parent::setUp();
         container()->get(NoteCollection::class)->wipe();
+        
+        $this->restartContainer();
+        $this->setAuthorizationAs(true);
     }
     
     function test_it_works()
@@ -46,12 +50,32 @@ class ModifyNoteHandlerTest extends BaseTest
     {
         $this->expectException(ModelNotFound::class);
         
-        $faker    = Factory::create();
-        $id = new Identity();
-        $text     = new NoteText($faker->text);
+        $faker = Factory::create();
+        $id    = new Identity();
+        $text  = new NoteText($faker->text);
         
         $handler = container()->get(ModifyNoteHandler::class);
         $handler->__invoke(new ModifyNote($text, $id));
+    }
+    
+    function test_it_fires_event()
+    {
+        $faker    = Factory::create();
+        $id       = new Identity();
+        $owner_id = new Identity();
+        $text     = new NoteText($faker->text);
+        $logger   = $this->getEventBusLogger();
+        
+        // create note
+        $collection = container()->get(NoteCollection::class);
+        $note       = Note::make($id, $text, $owner_id);
+        $collection->save($note);
+        $this->assertEquals(1, $collection->all()->count());
+        
+        // modify note
+        command_bus()->dispatch(new ModifyNote($text, $id));
+        
+        $this->assertTrue($logger->assertHasEventForAggregateId(NoteModified::class, $id));
     }
     
 }

@@ -12,6 +12,7 @@ use Doctrine\DBAL\Migrations\Tools\Console\Helper\ConfigurationHelper;
 use Doctrine\DBAL\Version;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Tests\Services\AuthorizationFakeService;
+use EMA\Tests\Services\BusEventLogger;
 use PHPUnit\Framework\TestCase;
 use Prooph\ServiceBus\Plugin\Guard\AuthorizationService;
 use Symfony\Component\Console\Application;
@@ -74,19 +75,16 @@ class BaseTest extends TestCase
         $cli->doRun($input, new NullOutput());
         
     }
-}
-
-class TestOutput extends Output
-{
-    public $output = '';
     
-    public function clear()
+    protected function getEventBusLogger(): BusEventLogger
     {
-        $this->output = '';
+        
+        $bus_event_logger = new BusEventLogger();
+        $bus_event_logger->attachToMessageBus(event_bus());
+        
+        return $bus_event_logger;
+        
     }
     
-    protected function doWrite($message, $newline)
-    {
-        $this->output .= $message . ($newline ? "\n" : '');
-    }
+    
 }

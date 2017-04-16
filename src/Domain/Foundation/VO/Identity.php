@@ -43,6 +43,6 @@ final class Identity
      */
     public function isEqual(Identity $id): bool
     {
-        return $id->getAsString() == $this->getAsString();
+        return $id->getAsString() === $this->getAsString();
     }
 }
