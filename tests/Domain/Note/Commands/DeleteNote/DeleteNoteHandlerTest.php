@@ -18,7 +18,6 @@ class DeleteNoteHandlerTest extends BaseTest
     protected function setUp()
     {
         parent::setUp();
-        container()->get(NoteCollection::class)->wipe();
         
         $this->restartContainer();
         $this->setAuthorizationAs(true);
@@ -58,10 +57,10 @@ class DeleteNoteHandlerTest extends BaseTest
         $collection = container()->get(NoteCollection::class);
         $note       = Note::make($id, $text, $owner_id);
         $collection->save($note);
-        $this->assertEquals(1, $collection->all()->count());
         
-        // modify note
-        command_bus()->dispatch(new DeleteNote($id));
+        // delete note
+        $handler = container()->get(DeleteNoteHandler::class);
+        $handler->__invoke(new DeleteNote($id));
         
         $this->assertTrue($logger->assertHasEventForAggregateId(NoteDeleted::class, $id));
     }

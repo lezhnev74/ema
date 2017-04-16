@@ -17,10 +17,13 @@
         <testsuite name="App">
             <directory suffix="Test.php">./tests/App</directory>
         </testsuite>
+        <testsuite name="Infrastructure">
+            <directory suffix="Test.php">./tests/Infrastructure</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
     <php>

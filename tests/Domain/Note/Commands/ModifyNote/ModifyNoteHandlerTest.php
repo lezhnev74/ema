@@ -19,7 +19,6 @@ class ModifyNoteHandlerTest extends BaseTest
     protected function setUp()
     {
         parent::setUp();
-        container()->get(NoteCollection::class)->wipe();
         
         $this->restartContainer();
         $this->setAuthorizationAs(true);

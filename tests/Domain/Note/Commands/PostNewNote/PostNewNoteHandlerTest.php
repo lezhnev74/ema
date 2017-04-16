@@ -17,7 +17,8 @@ class PostNewNoteHandlerTest extends BaseTest
     protected function setUp()
     {
         parent::setUp();
-        container()->get(NoteCollection::class)->wipe();
+        
+        $this->restartContainer();
     }
     
     function test_public_api()

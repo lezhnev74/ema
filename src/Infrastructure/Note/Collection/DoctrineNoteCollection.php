@@ -69,7 +69,10 @@ final class DoctrineNoteCollection implements NoteCollection
     
     public function delete(Identity $id): void
     {
-        // TODO: Implement delete() method.
+        $sql       = "DELETE from notes where id=:id";
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(":id", $id->getAsString());
+        $statement->execute();
     }
     
     /**

@@ -1,19 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace EMA\Tests\Domain\Note\Commands\PostNewNote;
+namespace EMA\Tests\Infrastructure\Note\Commands\PostNewNote;
 
 use function DI\object;
-use EMA\Domain\Foundation\VO\Identity;
-use EMA\Domain\Note\Commands\PostNewNote\PostNewNote;
-use EMA\Domain\Note\Commands\PostNewNote\PostNewNoteHandler;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
-use EMA\Domain\Note\Model\VO\NoteText;
 use EMA\Infrastructure\Note\Collection\DoctrineNoteCollection;
 use EMA\Tests\BaseTest;
-use Faker\Factory;
 
-class PostNewNoteHandlerTest extends BaseTest
+class PostNewNoteHandlerTest extends \EMA\Tests\Domain\Note\Commands\PostNewNote\PostNewNoteHandlerTest
 {
     protected function setUp()
     {
@@ -24,5 +19,5 @@ class PostNewNoteHandlerTest extends BaseTest
         
         $this->migrate();
     }
-        
+    
 }
