@@ -24,26 +24,5 @@ class PostNewNoteHandlerTest extends BaseTest
         
         $this->migrate();
     }
-    
-    
-    function test_public_api()
-    {
-        $faker    = Factory::create();
-        $id       = new Identity();
-        $owner_id = new Identity();
-        $text     = new NoteText($faker->text);
         
-        // 1. command
-        $command = new PostNewNote($text, $id, $owner_id);
-        
-        // 2. handle command directly
-        $handler = container()->get(PostNewNoteHandler::class);
-        $handler->__invoke($command);
-        
-        // 3. assert note created
-        $collection = container()->get(NoteCollection::class);
-        $this->assertEquals(1, $collection->all()->count());
-        
-    }
-    
 }
