@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "10160702263c49281f949f808d765b4e",
+    "content-hash": "df4f0f3cff95e6a4814fa0c47102041b",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1425,6 +1425,75 @@
                 "uuid"
             ],
             "time": "2017-03-26T20:37:53+00:00"
+        },
+        {
+            "name": "sandrokeil/interop-config",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sandrokeil/interop-config.git",
+                "reference": "195e553b7653d480bdbc6a7941fbc1bed27be77d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sandrokeil/interop-config/zipball/195e553b7653d480bdbc6a7941fbc1bed27be77d",
+                "reference": "195e553b7653d480bdbc6a7941fbc1bed27be77d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "bookdown/bookdown": "1.x-dev as 1.0.0",
+                "malukenho/docheader": "^0.1.5",
+                "phpbench/phpbench": "^1.0@dev",
+                "phpunit/phpunit": "^6.0.3",
+                "squizlabs/php_codesniffer": "^3.0",
+                "tobiju/bookdown-bootswatch-templates": "1.1"
+            },
+            "suggest": {
+                "psr/container": "To retrieve config in your factories"
+            },
+            "bin": [
+                "bin/interop-config"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev",
+                    "dev-develop": "2.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Interop\\Config\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sandro Keil",
+                    "homepage": "https://sandro-keil.de",
+                    "role": "maintainer"
+                }
+            ],
+            "description": "Provides interfaces and a concrete implementation to create instances depending on configuration via factory classes and ensures a valid config structure. It can also be used to auto discover factories and to create configuration files.",
+            "homepage": "https://github.com/sandrokeil/interop-config",
+            "keywords": [
+                "config",
+                "configuration",
+                "factory",
+                "interfaces",
+                "interop",
+                "options",
+                "php",
+                "service",
+                "standard"
+            ],
+            "time": "2017-02-14T21:19:28+00:00"
         },
         {
             "name": "symfony/console",

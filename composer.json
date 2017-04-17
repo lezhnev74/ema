@@ -24,7 +24,8 @@
         "prooph/service-bus": "^6.0",
         "lezhnev74/prooph-direct-router": "^1.0",
         "doctrine/dbal": "^2.5",
-        "doctrine/migrations": "^1.5"
+        "doctrine/migrations": "^1.5",
+        "sandrokeil/interop-config": "^2.1"
     },
     "autoload": {
         "psr-4": {

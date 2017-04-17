@@ -78,7 +78,6 @@ class BaseTest extends TestCase
     
     protected function getEventBusLogger(): BusEventLogger
     {
-        
         $bus_event_logger = new BusEventLogger();
         $bus_event_logger->attachToMessageBus(event_bus());
         
