@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace EMA\App\Factory;
 
+use EMA\App\Http\Authentication\AuthenticationMiddleware;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 
 final class SlimFactory
@@ -19,7 +21,6 @@ final class SlimFactory
         
         return $app;
     }
-    
     
     /**
      * Init http routes
@@ -71,7 +72,7 @@ final class SlimFactory
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
                     return $response->withStatus(200)->write('ok');
                 })->setName('api.notes.delete');
-        });
+        })->add(new AuthenticationMiddleware());
         
         
     }

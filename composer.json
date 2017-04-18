@@ -26,7 +26,8 @@
         "doctrine/dbal": "^2.5",
         "doctrine/migrations": "^1.5",
         "sandrokeil/interop-config": "^2.1",
-        "slim/slim": "^3.0"
+        "slim/slim": "^3.0",
+        "lcobucci/jwt": "^3.2"
     },
     "autoload": {
         "psr-4": {

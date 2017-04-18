@@ -5,7 +5,6 @@ use function DI\factory;
 use function DI\get;
 use function DI\object;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
-use EMA\App\Factory\AuthorizationFactory;
 use EMA\App\Factory\SlimFactory;
 use EMA\Infrastructure\Factory\DoctrineConnection;
 use Interop\Container\ContainerInterface;

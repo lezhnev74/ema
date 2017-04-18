@@ -28,6 +28,7 @@
     </filter>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="123"/>
         <env name="DATABASE_SQLITE_PATH" value=""/>
         <env name="DATABASE_SQLITE_IN_MEMORY" value="true"/>
     </php>
