@@ -20,7 +20,7 @@ final class Identity
         if ($uuid) {
             $this->uuid = Uuid::fromString($uuid);
         } else {
-            $this->uuid = Uuid::uuid1();
+            $this->uuid = Uuid::uuid4();
         }
     }
     
