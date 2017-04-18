@@ -10,6 +10,7 @@ use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand;
 use Doctrine\DBAL\Migrations\Tools\Console\Helper\ConfigurationHelper;
 use Doctrine\DBAL\Version;
+use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Tests\Services\AuthorizationFakeService;
 use EMA\Tests\Services\BusEventLogger;
@@ -37,6 +38,11 @@ class BaseTest extends TestCase
             AuthorizationService::class,
             new AuthorizationFakeService($result)
         );
+    }
+    
+    protected function setAuthenticatedUser(Identity $id)
+    {
+        container()->set('authenticated_user_identity', $id);
     }
     
     /**

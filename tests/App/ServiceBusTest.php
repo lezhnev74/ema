@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace EMA\Tests\App;
 
+use EMA\Domain\Foundation\Command\AuthenticatedUserNotFound;
 use EMA\Domain\Foundation\VO\Identity;
+use EMA\Domain\Note\Commands\ModifyNote\ModifyNote;
 use EMA\Domain\Note\Commands\PostNewNote\PostNewNote;
-use EMA\Domain\Note\Commands\PostNewNote\PostNewNoteAuthorizer;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
+use EMA\Domain\Note\Model\Note;
 use EMA\Domain\Note\Model\VO\NoteText;
 use EMA\Tests\BaseTest;
 use Prooph\ServiceBus\Plugin\Guard\AuthorizationService;
@@ -17,11 +19,15 @@ final class ServiceBusTest extends BaseTest
     protected function setUp()
     {
         parent::setUp();
-        container()->get(NoteCollection::class)->wipe();
+        
+        $this->restartContainer();
+        
     }
     
     function test_direct_routing()
     {
+        $this->setAuthenticatedUser(new Identity());
+        
         // 1. command
         $command = new PostNewNote(new NoteText(""), new Identity(), new Identity());
         
@@ -36,11 +42,16 @@ final class ServiceBusTest extends BaseTest
     
     function test_it_throws_exception_on_authorization_deny()
     {
-        $this->restartContainer();
-        $this->setAuthorizationAs(false);
+        $this->setAuthenticatedUser(new Identity());
+        
+        // make some note
+        $note_id = new Identity();
+        $note    = container()->get(NoteCollection::class)->save(
+            new Note($note_id, new NoteText(""), new Identity())
+        );
         
         // 1. command
-        $command = new PostNewNote(new NoteText(""), new Identity(), new Identity());
+        $command = new ModifyNote(new NoteText(""), new Identity());
         
         // 2. handle command directly
         try {
@@ -49,6 +60,14 @@ final class ServiceBusTest extends BaseTest
         } catch (\Exception $e) {
             $this->assertEquals(UnauthorizedException::class, get_class($e->getPrevious()));
         }
+        
+    }
+    
+    function test_throw_exception_if_no_authenticated_user_set()
+    {
+        $this->expectException(AuthenticatedUserNotFound::class);
+        
+        container()->get(AuthorizationService::class);
         
     }
 }
