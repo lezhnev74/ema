@@ -11,6 +11,8 @@ use Interop\Container\ContainerInterface;
 use Prooph\ServiceBus\Container\CommandBusFactory;
 use Prooph\ServiceBus\Container\EventBusFactory;
 use Slim\App;
+use Slim\Interfaces\RouterInterface;
+use Slim\Router;
 
 return [
     

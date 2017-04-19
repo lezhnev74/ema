@@ -6,6 +6,8 @@ namespace EMA\App\Http\Authentication;
 use EMA\Domain\Foundation\VO\Identity;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Http\Response;
+use Slim\Http\Stream;
 
 final class AuthenticationMiddleware
 {
@@ -21,18 +23,23 @@ final class AuthenticationMiddleware
      */
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
-        
         if ($auth_line = $request->getHeaderLine('Authorization')) {
             if (preg_match("#^Bearer (.+)$#", $auth_line, $p)) {
                 $token = $p[1];
                 
                 // is it a valid token?
+                $jwt = new JWT();
+    
+                $id = $jwt->parseToken($token);
+                container()->set('authenticated_user_identity', $id); // authenticate user
                 
-                if (false) {
-                    $id = new Identity();
-                    container()->set('authenticated_user_identity', $id); // authenticate user
-                }
             }
+        }
+        
+        if (is_null(current_authenticated_user_id())) {
+            $response = $response->withStatus(403);
+            
+            return $response;
         }
         
         $response = $next($request, $response);

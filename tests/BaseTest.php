@@ -10,12 +10,16 @@ use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Tools\Console\Command\AbstractCommand;
 use Doctrine\DBAL\Migrations\Tools\Console\Helper\ConfigurationHelper;
 use Doctrine\DBAL\Version;
+use EMA\App\Http\Authentication\JWT;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Tests\Services\AuthorizationFakeService;
 use EMA\Tests\Services\BusEventLogger;
 use PHPUnit\Framework\TestCase;
 use Prooph\ServiceBus\Plugin\Guard\AuthorizationService;
+use Slim\App;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -91,5 +95,35 @@ class BaseTest extends TestCase
         
     }
     
+    
+    protected function sendHttp(
+        string $method,
+        string $path,
+        array $data = [],
+        Identity $user_id = null,
+        App $app = null
+    ): Response {
+        
+        if (!$app) {
+            $app = container()->get(App::class);
+        }
+        
+        $headers = ['Content-Type' => 'application/json'];
+        if ($user_id) {
+            $jwt                      = new JWT();
+            $token                    = $jwt->makeToken($user_id);
+            $headers['Authorization'] = 'Bearer ' . $token;
+        }
+        
+        $response = $response = $app->subRequest(
+            $method,
+            $path,
+            '',
+            $headers,
+            [],
+            json_encode($data));
+        
+        return $response;
+    }
     
 }

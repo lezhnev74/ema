@@ -2,6 +2,7 @@
 use DirectRouter\DirectRouter;
 use Doctrine\Common\Cache\ApcuCache;
 use DummyConfigLoader\Config;
+use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\VO\NoteText;
 use Prooph\ServiceBus\CommandBus;
 use Prooph\ServiceBus\Container\CommandBusFactory;
@@ -143,6 +144,19 @@ if (!function_exists('event_bus')) {
         //$factory = new EventBusFactory();
         //return $factory(container());
         return container()->get(EventBus::class);
+    }
+}
+
+if (!function_exists('current_authenticated_user_id')) {
+    /**
+     * current_authenticated_user_id
+     *
+     *
+     * @return Identity|null
+     */
+    function current_authenticated_user_id()
+    {
+        return container()->get('authenticated_user_identity');
     }
 }
 
