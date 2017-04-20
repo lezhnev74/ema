@@ -44,7 +44,6 @@ final class AuthorizationService implements ProophAuthorizationService
      */
     public function isGranted(string $messageName, $context = null): bool
     {
-        
         //
         // 1. Is it a FQCN message?
         //
