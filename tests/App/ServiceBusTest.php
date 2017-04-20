@@ -21,7 +21,6 @@ final class ServiceBusTest extends BaseTest
         parent::setUp();
         
         $this->restartContainer();
-        
     }
     
     function test_direct_routing()
@@ -51,7 +50,7 @@ final class ServiceBusTest extends BaseTest
         );
         
         // 1. command
-        $command = new ModifyNote(new NoteText(""), new Identity());
+        $command = new ModifyNote(new NoteText(""), $note_id);
         
         // 2. handle command directly
         try {
