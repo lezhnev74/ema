@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace EMA\App\Factory;
 
+use Doctrine\Common\Collections\Collection;
 use EMA\App\Http\Authentication\AuthenticationMiddleware;
+use EMA\App\Query\Note\AllNotes\AllNotes;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Commands\PostNewNote\PostNewNote;
 use EMA\Domain\Note\Model\VO\NoteText;
@@ -83,8 +85,18 @@ final class SlimFactory
             
             $this->get('/', function (RequestInterface $request, ResponseInterface $response, array $args) {
                 
+                // Query all available notes
+                $query = new AllNotes(current_authenticated_user_id());
+                /** @var Collection $result */
+                $result          = query_bus_sync_dispatch($query);
+                $result_filtered = $result->filter(function (array $entry) {
+                    return $entry['owner_id'] == current_authenticated_user_id()->getAsString();
+                });
                 
-                return $response->withStatus(200)->write('ok');
+                $response = $response->withJson($result_filtered->toArray(), 200);
+                
+                return $response;
+                
             })->setName('api.notes');
             
             $this->post('/', function (RequestInterface $request, ResponseInterface $response, array $args) {
@@ -92,7 +104,7 @@ final class SlimFactory
                 $id         = new Identity();
                 $owner_id   = current_authenticated_user_id();
                 $input_data = json_decode($request->getBody()->getContents(), true);
-                $text = new NoteText($input_data['text']);
+                $text       = new NoteText($input_data['text']);
                 $command    = new PostNewNote($text, $id, $owner_id);
                 
                 return $response->withStatus(200)->write('ok');

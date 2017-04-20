@@ -6,17 +6,19 @@ use function DI\get;
 use function DI\object;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use EMA\App\Factory\SlimFactory;
+use EMA\App\Query\Note\NoteFinder;
 use EMA\Infrastructure\Factory\DoctrineConnection;
+use EMA\Infrastructure\Note\Finder\DoctrineNoteFinder;
 use Interop\Container\ContainerInterface;
 use Prooph\ServiceBus\Container\CommandBusFactory;
 use Prooph\ServiceBus\Container\EventBusFactory;
+use Prooph\ServiceBus\Container\QueryBusFactory;
 use Slim\App;
-use Slim\Interfaces\RouterInterface;
-use Slim\Router;
+
 
 return [
     
-    // Config
+    // Config (following Interop/Config rules)
     'config' => factory(function (ContainerInterface $container) {
         $config = [];
         $config = array_merge($config, config('prooph_config')); //add prooph config in there
@@ -42,8 +44,11 @@ return [
     //\Prooph\ServiceBus\Plugin\Guard\FinalizeGuard::class => factory(\Prooph\ServiceBus\Container\Plugin\Guard\FinalizeGuardFactory::class),
     // Event bus
     \Prooph\ServiceBus\EventBus::class => factory(EventBusFactory::class),
+    // Query bus
+    \Prooph\ServiceBus\QueryBus::class => factory(QueryBusFactory::class),
     
     App::class => factory(SlimFactory::class),
+    NoteFinder::class => object(DoctrineNoteFinder::class),
     
     
     //

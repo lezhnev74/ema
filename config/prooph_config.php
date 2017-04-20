@@ -13,7 +13,7 @@ return [
                 //You can add a list of container service ids
                 //The factory will use these to get the plugins from the container
                 'plugins' => [
-                    ServiceLocatorPlugin::class,
+                    //ServiceLocatorPlugin::class,
                     RouteGuard::class,
                 ],
                 'router' => [
@@ -57,7 +57,10 @@ return [
             'query_bus' => [
                 //You can add a list of container service ids
                 //The factory will use these to get the plugins from the container
-                'plugins' => [],
+                'plugins' => [
+                    //ServiceLocatorPlugin::class,
+                    RouteGuard::class,
+                ],
                 //Map of message routes where the message name being the key and the query handler being the value.
                 //To lazy-load query handlers you can provide a service id instead.
                 //In this case the handler is pulled from the container using the provided handler service id
@@ -66,6 +69,7 @@ return [
                     //Router defaults to Prooph\ServiceBus\Plugin\Router\QueryRouter
                     //Comment out the next line to use the RegexRouter instead
                     //'type' => \Prooph\ServiceBus\Plugin\Router\RegexRouter::class,
+                    'type' => DirectRouter::class,
                     
                     //[optional] Enable the AsyncSwitchMessageRouter, see docs/plugins.md AsyncSwitchMessageRouter section for details
                     //If "async_switch" key is present and references an Async\MessageProducer available in the container

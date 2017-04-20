@@ -16,7 +16,7 @@ abstract class Authorizer
      *
      *
      * @param Identity $user_id who sent this command
-     * @param          $command TODO each authorizer will expect different command type
+     * @param mixed    $command
      *
      * @return bool
      */

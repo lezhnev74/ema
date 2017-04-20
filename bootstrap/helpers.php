@@ -10,6 +10,7 @@ use Prooph\ServiceBus\Container\EventBusFactory;
 use Prooph\ServiceBus\EventBus;
 use Prooph\ServiceBus\Plugin\InvokeStrategy\HandleCommandStrategy;
 use Prooph\ServiceBus\Plugin\ServiceLocatorPlugin;
+use Prooph\ServiceBus\QueryBus;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Translation\Tests\StringClass;
 use voku\helper\UTF8;
@@ -141,9 +142,28 @@ if (!function_exists('command_bus')) {
 if (!function_exists('event_bus')) {
     function event_bus(): EventBus
     {
-        //$factory = new EventBusFactory();
-        //return $factory(container());
         return container()->get(EventBus::class);
+    }
+}
+
+if (!function_exists('query_bus')) {
+    function query_bus(): QueryBus
+    {
+        return container()->get(QueryBus::class);
+    }
+}
+
+if (!function_exists('query_bus_sync_dispatch')) {
+    function query_bus_sync_dispatch($query)
+    {
+        $value = null;
+        query_bus()->dispatch($query)->then(function ($result) use (&$value) {
+            $value = $result;
+        }, function (Throwable $problem) {
+            throw $problem;
+        });
+        
+        return $value;
     }
 }
 
