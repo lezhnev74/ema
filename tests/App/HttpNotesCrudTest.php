@@ -69,6 +69,27 @@ final class HttpNotesCrudTest extends BaseTest
         $this->assertEquals($note_id1->getAsString(), $json_response[0]['id']);
     }
     
+    function test_unable_to_see_other_people_note()
+    {
+        // seed
+        $me     = new Identity();
+        $not_me = new Identity();
+        $this->setAuthenticatedUser($me);
+        
+        container()->get(NoteCollection::class)->save(new Note(new Identity(), new NoteText(""), $not_me));
+        
+        // get all my notes
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes.search', [
+            'query' => 'sequence',
+        ]);
+        $response = $this->sendHttp("get", $path, [], $me);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        $json_response = json_decode((string)$response->getBody(), true);
+        $this->assertEquals(0, count($json_response));
+    }
+    
     function test_add_new_note()
     {
         $this->markTestIncomplete();
@@ -79,10 +100,6 @@ final class HttpNotesCrudTest extends BaseTest
         $this->markTestIncomplete();
     }
     
-    function test_unable_to_see_other_people_note()
-    {
-        $this->markTestIncomplete();
-    }
     
     function test_unable_to_change_other_note()
     {
