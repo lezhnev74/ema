@@ -161,7 +161,7 @@ if (!function_exists('query_bus_sync_dispatch')) {
             $value = $result;
         }, function (Throwable $problem) {
             throw $problem;
-        });
+        })->done();
         
         return $value;
     }

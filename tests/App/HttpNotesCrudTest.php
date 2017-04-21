@@ -58,15 +58,15 @@ final class HttpNotesCrudTest extends BaseTest
         
         // get all my notes
         $app      = container()->get(App::class);
-        $path     = $app->getContainer()->get('router')->pathFor('api.notes.search');
-        $response = $this->sendHttp("get", $path, [
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes.search', [
             'query' => 'sequence',
-        ], $me);
+        ]);
+        $response = $this->sendHttp("get", $path, [], $me);
         
-        //$this->assertEquals(200, $response->getStatusCode());
-        //$json_response = json_decode((string)$response->getBody(), true);
-        //$this->assertEquals(1, count($json_response));
-        //$this->assertEquals($note_id1->getAsString(), $json_response[0]['id']);
+        $this->assertEquals(200, $response->getStatusCode());
+        $json_response = json_decode((string)$response->getBody(), true);
+        $this->assertEquals(1, count($json_response));
+        $this->assertEquals($note_id1->getAsString(), $json_response[0]['id']);
     }
     
     function test_add_new_note()
