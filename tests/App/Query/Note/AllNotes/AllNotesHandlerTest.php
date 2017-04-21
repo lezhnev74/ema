@@ -27,10 +27,10 @@ class AllNotesHandlerTest extends BaseTest
         container()->get(NoteCollection::class)->save(new Note(new Identity(), new NoteText(""), $me));
         container()->get(NoteCollection::class)->save(new Note(new Identity(), new NoteText(""), $me));
         
-        $query  = new AllNotes($me);
-        query_bus()->dispatch($query)->then(function(Collection $result){
+        $query = new AllNotes($me);
+        query_bus()->dispatch($query)->then(function (Collection $result) {
             $this->assertEquals(3, $result->count());
-        });
+        })->done();
         
     }
     

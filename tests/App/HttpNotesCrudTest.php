@@ -45,6 +45,30 @@ final class HttpNotesCrudTest extends BaseTest
         
     }
     
+    function test_search_notes()
+    {
+        // seed
+        $me       = new Identity();
+        $note_id1 = new Identity();
+        $note_id2 = new Identity();
+        container()->get(NoteCollection::class)->save(new Note($note_id1,
+            new NoteText("sequences of uncertainty have started"), $me));
+        container()->get(NoteCollection::class)->save(new Note($note_id2,
+            new NoteText("when will the star fall down?"), $me));
+        
+        // get all my notes
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes.search');
+        $response = $this->sendHttp("get", $path, [
+            'query' => 'sequence',
+        ], $me);
+        
+        //$this->assertEquals(200, $response->getStatusCode());
+        //$json_response = json_decode((string)$response->getBody(), true);
+        //$this->assertEquals(1, count($json_response));
+        //$this->assertEquals($note_id1->getAsString(), $json_response[0]['id']);
+    }
+    
     function test_add_new_note()
     {
         $this->markTestIncomplete();

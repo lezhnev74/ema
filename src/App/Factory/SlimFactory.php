@@ -98,6 +98,22 @@ final class SlimFactory
                 return $response;
                 
             })->setName('api.notes');
+    
+            $this->get('/search', function (RequestInterface $request, ResponseInterface $response, array $args) {
+        
+                // Query all available notes
+                $query = new AllNotes(current_authenticated_user_id());
+                /** @var Collection $result */
+                $result          = query_bus_sync_dispatch($query);
+                $result_filtered = $result->filter(function (array $entry) {
+                    return $entry['owner_id'] == current_authenticated_user_id()->getAsString();
+                });
+        
+                $response = $response->withJson($result_filtered->toArray(), 200);
+        
+                return $response;
+        
+            })->setName('api.notes.search');
             
             $this->post('/', function (RequestInterface $request, ResponseInterface $response, array $args) {
                 

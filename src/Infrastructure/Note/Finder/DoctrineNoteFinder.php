@@ -6,6 +6,7 @@ namespace EMA\Infrastructure\Note\Finder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
+use EMA\Domain\Foundation\VO\Identity;
 
 final class DoctrineNoteFinder implements \EMA\App\Query\Note\NoteFinder
 {
@@ -27,4 +28,19 @@ final class DoctrineNoteFinder implements \EMA\App\Query\Note\NoteFinder
         
         return $collection;
     }
+    
+    public function search(string $query, Identity $ownerId): Collection
+    {
+        $result     = $this->connection->fetchAll(
+            "select * from notes where owner_id=? AND `note_text` LIKE ?", [
+                $ownerId->getAsString(),
+                "%" . $query . "%",
+            ]
+        );
+        $collection = new ArrayCollection($result);
+        
+        return $collection;
+    }
+    
+    
 }

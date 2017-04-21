@@ -25,6 +25,10 @@ cd <project root>
 php migrations/doctrine.php migrations:migrate
 ```
 
+This app is supposed to work with databases that support FullText search. For example, MariaDB.
+You need to explicitly set a filed `notes.note_text` as `FULLTEXT(note_text)` before using the app.
+
+
 
 
 
