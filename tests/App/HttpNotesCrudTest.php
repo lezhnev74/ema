@@ -37,7 +37,8 @@ final class HttpNotesCrudTest extends BaseTest
         // get all my notes
         $app      = container()->get(App::class);
         $path     = $app->getContainer()->get('router')->pathFor('api.notes');
-        $response = $this->sendHttp("get", $path, [], $me);
+        $request  = $this->getRequest("get", $path, [], $me);
+        $response = $this->sendHttpRequest($request, $app);
         
         $this->assertEquals(200, $response->getStatusCode());
         $json_response = json_decode((string)$response->getBody(), true);
@@ -61,7 +62,8 @@ final class HttpNotesCrudTest extends BaseTest
         $path     = $app->getContainer()->get('router')->pathFor('api.notes.search', [
             'query' => 'sequence',
         ]);
-        $response = $this->sendHttp("get", $path, [], $me);
+        $request  = $this->getRequest("get", $path, [], $me);
+        $response = $this->sendHttpRequest($request, $app);
         
         $this->assertEquals(200, $response->getStatusCode());
         $json_response = json_decode((string)$response->getBody(), true);
@@ -83,7 +85,8 @@ final class HttpNotesCrudTest extends BaseTest
         $path     = $app->getContainer()->get('router')->pathFor('api.notes.search', [
             'query' => 'sequence',
         ]);
-        $response = $this->sendHttp("get", $path, [], $me);
+        $request  = $this->getRequest("get", $path, [], $me);
+        $response = $this->sendHttpRequest($request, $app);
         
         $this->assertEquals(200, $response->getStatusCode());
         $json_response = json_decode((string)$response->getBody(), true);
@@ -92,28 +95,107 @@ final class HttpNotesCrudTest extends BaseTest
     
     function test_add_new_note()
     {
-        $this->markTestIncomplete();
+        // seed
+        $me = new Identity();
+        $this->setAuthenticatedUser($me);
+        $this->assertEquals(0, container()->get(NoteCollection::class)->all()->count());
+        
+        // send request
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes');
+        $request  = $this->getRequest("post", $path, ['text' => 'hello'], $me);
+        $response = $this->sendHttpRequest($request, $app);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        $json_response = json_decode((string)$response->getBody(), true);
+        
+        $this->assertEquals(1, container()->get(NoteCollection::class)->all()->count());
     }
     
     function test_update_note()
     {
-        $this->markTestIncomplete();
+        // seed
+        $me = new Identity();
+        $this->setAuthenticatedUser($me);
+        
+        $note_id = new Identity();
+        container()->get(NoteCollection::class)->save(new Note($note_id, new NoteText("text"), $me));
+        
+        // send request
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes.update', [
+            'note_id' => $note_id->getAsString(),
+        ]);
+        $request  = $this->getRequest("post", $path, ["text" => "text2"], $me);
+        $response = $this->sendHttpRequest($request, $app);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(1, container()->get(NoteCollection::class)->all()->count());
+        $this->assertEquals("text2", container()->get(NoteCollection::class)->all()->first()->getText()->getText());
     }
     
     
     function test_unable_to_change_other_note()
     {
-        $this->markTestIncomplete();
+        // seed
+        $me     = new Identity();
+        $not_me = new Identity();
+        $this->setAuthenticatedUser($me);
+        
+        $note_id = new Identity();
+        container()->get(NoteCollection::class)->save(new Note($note_id, new NoteText("text"), $not_me));
+        
+        // send request
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes.update', [
+            'note_id' => $note_id->getAsString(),
+        ]);
+        $request  = $this->getRequest("post", $path, ["text" => "text2"], $me);
+        $response = $this->sendHttpRequest($request, $app);
+        
+        $this->assertEquals(403, $response->getStatusCode());
     }
     
     function test_can_delete_my_note()
     {
-        $this->markTestIncomplete();
+        // seed
+        $me = new Identity();
+        $this->setAuthenticatedUser($me);
+        
+        $note_id = new Identity();
+        container()->get(NoteCollection::class)->save(new Note($note_id, new NoteText("text"), $me));
+        
+        // send request
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes.delete', [
+            'note_id' => $note_id->getAsString(),
+        ]);
+        $request  = $this->getRequest("delete", $path, [], $me);
+        $response = $this->sendHttpRequest($request, $app);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(0, container()->get(NoteCollection::class)->all()->count());
     }
     
     function test_cannot_delete_other_people_note()
     {
-        $this->markTestIncomplete();
+        // seed
+        $me     = new Identity();
+        $not_me = new Identity();
+        $this->setAuthenticatedUser($me);
+        
+        $note_id = new Identity();
+        container()->get(NoteCollection::class)->save(new Note($note_id, new NoteText("text"), $not_me));
+        
+        // send request
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes.delete', [
+            'note_id' => $note_id->getAsString(),
+        ]);
+        $request  = $this->getRequest("delete", $path, [], $me);
+        $response = $this->sendHttpRequest($request, $app);
+        
+        $this->assertEquals(403, $response->getStatusCode());
     }
     
 }

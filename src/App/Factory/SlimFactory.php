@@ -8,9 +8,12 @@ use EMA\App\Http\Authentication\AuthenticationMiddleware;
 use EMA\App\Query\Note\AllNotes\AllNotes;
 use EMA\App\Query\Note\SearchNotes\SearchNotes;
 use EMA\Domain\Foundation\VO\Identity;
+use EMA\Domain\Note\Commands\DeleteNote\DeleteNote;
+use EMA\Domain\Note\Commands\ModifyNote\ModifyNote;
 use EMA\Domain\Note\Commands\PostNewNote\PostNewNote;
 use EMA\Domain\Note\Model\VO\NoteText;
 use Interop\Container\ContainerInterface;
+use Prooph\ServiceBus\Plugin\Guard\UnauthorizedException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,6 +29,8 @@ final class SlimFactory
         $app = new App();
         
         $this->init_routes($app);
+        
+        $this->addErrorHandler($app);
         
         //
         // Trailing slash fix
@@ -45,10 +50,31 @@ final class SlimFactory
                 }
             }
             
+            
             return $next($request, $response);
         });
         
         return $app;
+    }
+    
+    
+    private function addErrorHandler(App $app)
+    {
+        $c                 = $app->getContainer();
+        $c['errorHandler'] = function ($c) {
+            return function (ServerRequestInterface $request, ResponseInterface $response, \Throwable $exception) use (
+                $c
+            ) {
+                
+                if (get_class($exception->getPrevious()) == UnauthorizedException::class) {
+                    return $response->withStatus(403);
+                }
+                
+                return $response->withStatus(500)
+                                ->withHeader('Content-Type', 'text/html')
+                                ->write('Something went wrong!');
+            };
+        };
     }
     
     /**
@@ -84,7 +110,7 @@ final class SlimFactory
         //
         $app->group('/api/notes', function () {
             
-            $this->get('/', function (RequestInterface $request, ResponseInterface $response, array $args) {
+            $this->get('', function (RequestInterface $request, ResponseInterface $response, array $args) {
                 
                 // Query all available notes
                 $query = new AllNotes(current_authenticated_user_id());
@@ -100,6 +126,7 @@ final class SlimFactory
                 
             })->setName('api.notes');
             
+            
             $this->get('/search/{query}',
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
                     
@@ -114,26 +141,45 @@ final class SlimFactory
                     
                 })->setName('api.notes.search');
             
-            $this->post('/', function (RequestInterface $request, ResponseInterface $response, array $args) {
+            
+            $this->post('', function (RequestInterface $request, ResponseInterface $response, array $args) {
                 
                 $id         = new Identity();
                 $owner_id   = current_authenticated_user_id();
                 $input_data = json_decode($request->getBody()->getContents(), true);
                 $text       = new NoteText($input_data['text']);
                 $command    = new PostNewNote($text, $id, $owner_id);
+                command_bus()->dispatch($command);
                 
                 return $response->withStatus(200)->write('ok');
             })->setName('api.notes.add');
             
-            $this->put('/{note_id:[a-zA-Z]+}',
+            
+            $this->post('/{note_id:[0-9a-zA-Z-]+}',
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
+                    
+                    $input_data = json_decode($request->getBody()->getContents(), true);
+                    $text       = new NoteText($input_data['text']);
+                    $note_id    = new Identity($args['note_id']);
+                    $command    = new ModifyNote($text, $note_id);
+                    command_bus()->dispatch($command);
+                    
                     return $response->withStatus(200)->write('ok');
                 })->setName('api.notes.update');
             
-            $this->delete('/{note_id:[a-zA-Z]+}',
+            
+            $this->delete('/{note_id:[0-9a-zA-Z-]+}',
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
+    
+                    $note_id    = new Identity($args['note_id']);
+                    $command    = new DeleteNote($note_id);
+                    command_bus()->dispatch($command);
+                    
                     return $response->withStatus(200)->write('ok');
+                    
                 })->setName('api.notes.delete');
+            
+            
         })->add(new AuthenticationMiddleware());
         
         

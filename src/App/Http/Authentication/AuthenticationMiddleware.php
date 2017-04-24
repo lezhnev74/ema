@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 namespace EMA\App\Http\Authentication;
 
-use EMA\Domain\Foundation\VO\Identity;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Http\Response;
-use Slim\Http\Stream;
 
 final class AuthenticationMiddleware
 {
@@ -23,6 +20,7 @@ final class AuthenticationMiddleware
      */
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
+        
         if ($auth_line = $request->getHeaderLine('Authorization')) {
             if (preg_match("#^Bearer (.+)$#", $auth_line, $p)) {
                 $token = $p[1];

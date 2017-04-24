@@ -17,17 +17,14 @@ use EMA\Tests\Services\AuthorizationFakeService;
 use EMA\Tests\Services\BusEventLogger;
 use PHPUnit\Framework\TestCase;
 use Prooph\ServiceBus\Plugin\Guard\AuthorizationService;
+use Psr\Http\Message\RequestInterface;
 use Slim\App;
+use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Output\Output;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class BaseTest extends TestCase
 {
@@ -95,12 +92,8 @@ class BaseTest extends TestCase
         
     }
     
-    
-    protected function sendHttp(
-        string $method,
-        string $path,
-        array $data = [],
-        Identity $user_id = null,
+    protected function sendHttpRequest(
+        RequestInterface $request,
         App $app = null
     ): Response {
         
@@ -108,22 +101,38 @@ class BaseTest extends TestCase
             $app = container()->get(App::class);
         }
         
-        $headers = ['Content-Type' => 'application/json'];
-        if ($user_id) {
-            $jwt                      = new JWT();
-            $token                    = $jwt->makeToken($user_id);
-            $headers['Authorization'] = 'Bearer ' . $token;
-        }
-        
-        $response = $response = $app->subRequest(
-            $method,
-            $path,
-            '',
-            $headers,
-            [],
-            json_encode($data));
+        $response = $app->process($request, new Response());
         
         return $response;
+    }
+    
+    protected function getRequest(
+        string $method,
+        string $path,
+        array $data = [],
+        Identity $current_user_id = null
+    ): Request {
+        $method = strtoupper($method);
+        
+        $request = Request::createFromEnvironment(Environment::mock([
+            'REQUEST_METHOD' => strtoupper($method),
+            'REQUEST_URI' => $path,
+            'QUERY_STRING' => ($method == "GET") ? http_build_query($data) : "",
+        ]));
+        
+        $request = $request->withHeader('Content-Type', 'application/json');
+        
+        if ($method == "POST") {
+            $request->getBody()->write(json_encode($data));
+        }
+        
+        if ($current_user_id) {
+            $jwt     = new JWT();
+            $token   = $jwt->makeToken($current_user_id);
+            $request = $request->withHeader('Authorization', 'Bearer ' . $token);
+        }
+        
+        return $request;
     }
     
 }
