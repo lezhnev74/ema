@@ -5,11 +5,13 @@ use function DI\factory;
 use function DI\get;
 use function DI\object;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use EMA\App\Factory\LogFactory;
 use EMA\App\Factory\SlimFactory;
 use EMA\App\Query\Note\NoteFinder;
 use EMA\Infrastructure\Factory\DoctrineConnection;
 use EMA\Infrastructure\Note\Finder\DoctrineNoteFinder;
 use Interop\Container\ContainerInterface;
+use Monolog\Logger;
 use Prooph\ServiceBus\Container\CommandBusFactory;
 use Prooph\ServiceBus\Container\EventBusFactory;
 use Prooph\ServiceBus\Container\QueryBusFactory;
@@ -58,5 +60,6 @@ return [
     
     \Doctrine\DBAL\Connection::class => factory([DoctrineConnection::class, 'default']),
     Configuration::class => factory([DoctrineConnection::class, 'migration_config']),
+    Logger::class => factory(LogFactory::class),
 ];
 

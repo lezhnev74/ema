@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use EMA\App\Http\Authentication\AuthenticationMiddleware;
 use EMA\App\Query\Note\AllNotes\AllNotes;
 use EMA\App\Query\Note\SearchNotes\SearchNotes;
+use EMA\Domain\Foundation\Exception\DomainProblem;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Commands\DeleteNote\DeleteNote;
 use EMA\Domain\Note\Commands\ModifyNote\ModifyNote;
@@ -66,29 +67,41 @@ final class SlimFactory
             return function (ServerRequestInterface $request, ResponseInterface $response, \Throwable $exception) use (
                 $c
             ) {
-                
-                if (get_class($exception->getPrevious()) == UnauthorizedException::class) {
-                    return $response->withJson([
-                        'error_code' => 'ACCESS_DENIED',
-                        'error_message' => 'You have no access to perform this operation',
-                    ], 403);
-                }
-                
-                if (get_class($exception->getPrevious()) == InvalidArgumentException::class) {
-                    /** @var InvalidArgumentException $e */
-                    $e = $exception->getPrevious();
-                    
-                    return $response->withJson([
-                        'error_code' => 'INVALID_DATA',
-                        'error_message' => $e->getMessage(),
-                    ], 422);
-                }
-                
                 // Default response
-                return $response->withJson([
+                $response = $response->withJson([
                     'error_code' => 'SERVER_ERROR',
                     'error_message' => 'Something went wrong',
                 ], 500);
+                
+                
+                if (get_class($exception->getPrevious()) == UnauthorizedException::class) {
+                    $response = $response->withJson([
+                        'error_code' => 'ACCESS_DENIED',
+                        'error_message' => 'You have no access to perform this operation',
+                    ], 403);
+                } elseif (get_class($exception->getPrevious()) == InvalidArgumentException::class) {
+                    /** @var InvalidArgumentException $e */
+                    $e = $exception->getPrevious();
+                    
+                    $response = $response->withJson([
+                        'error_code' => 'INVALID_DATA',
+                        'error_message' => $e->getMessage(),
+                    ], 422);
+                } elseif (get_class($exception->getPrevious()) == DomainProblem::class) {
+                    /** @var DomainProblem $e */
+                    $e = $exception->getPrevious();
+                    
+                    $response = $response->withJson([
+                        'error_code' => $e->getProblemCode(),
+                        'error_message' => $e->getMessage(),
+                    ], 422);
+                };
+                
+                log_problem($exception->getPrevious()->getMessage(), [
+                    'trace' => $exception->getTraceAsString(),
+                ]);
+                
+                return $response;
             };
         };
     }

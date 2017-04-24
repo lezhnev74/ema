@@ -4,6 +4,7 @@ use Doctrine\Common\Cache\ApcuCache;
 use DummyConfigLoader\Config;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\VO\NoteText;
+use Monolog\Logger;
 use Prooph\ServiceBus\CommandBus;
 use Prooph\ServiceBus\Container\CommandBusFactory;
 use Prooph\ServiceBus\Container\EventBusFactory;
@@ -180,3 +181,19 @@ if (!function_exists('current_authenticated_user_id')) {
     }
 }
 
+
+if (!function_exists('log_info')) {
+    function log_info(string $message, array $context = []): void
+    {
+        $logger = container()->get(Logger::class);
+        $logger->info("INFO[" . date('d.m.Y H:i:s') . "]: " . $message . "\n", $context);
+    }
+}
+
+if (!function_exists('log_problem')) {
+    function log_problem(string $message, array $context = []): void
+    {
+        $logger = container()->get(Logger::class);
+        $logger->error("ERROR[" . date('d.m.Y H:i:s') . "]: " . $message . "\n", $context);
+    }
+}

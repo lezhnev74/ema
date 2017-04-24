@@ -28,7 +28,8 @@
         "sandrokeil/interop-config": "^2.1",
         "slim/slim": "^3.0",
         "lcobucci/jwt": "^3.2",
-        "react/promise": "^2.5"
+        "react/promise": "^2.5",
+        "monolog/monolog": "^1.22"
     },
     "autoload": {
         "psr-4": {
