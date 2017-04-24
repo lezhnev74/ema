@@ -186,7 +186,7 @@ if (!function_exists('log_info')) {
     function log_info(string $message, array $context = []): void
     {
         $logger = container()->get(Logger::class);
-        $logger->info("INFO[" . date('d.m.Y H:i:s') . "]: " . $message . "\n", $context);
+        $logger->info($message . "\n", $context);
     }
 }
 
@@ -194,6 +194,6 @@ if (!function_exists('log_problem')) {
     function log_problem(string $message, array $context = []): void
     {
         $logger = container()->get(Logger::class);
-        $logger->error("ERROR[" . date('d.m.Y H:i:s') . "]: " . $message . "\n", $context);
+        $logger->error($message . "\n", $context);
     }
 }

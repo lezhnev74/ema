@@ -1,5 +1,6 @@
 <?php
 use DirectRouter\DirectRouter;
+use EMA\App\Bus\Plugin\LogCommands;
 use Prooph\ServiceBus\Plugin\Guard\RouteGuard;
 use Prooph\ServiceBus\Plugin\ServiceLocatorPlugin;
 
@@ -36,7 +37,9 @@ return [
             'event_bus' => [
                 //You can add a list of container service ids
                 //The factory will use these to get the plugins from the container
-                'plugins' => [],
+                'plugins' => [
+                    LogCommands::class,
+                ],
                 'router' => [
                     //Map of message routes where the message name being the key and the value being a list of event listeners.
                     //To lazy-load event listeners you can provide service ids instead.
