@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace EMA\App\Factory;
 
+use Assert\InvalidArgumentException;
 use Doctrine\Common\Collections\Collection;
 use EMA\App\Http\Authentication\AuthenticationMiddleware;
 use EMA\App\Query\Note\AllNotes\AllNotes;
@@ -67,12 +68,27 @@ final class SlimFactory
             ) {
                 
                 if (get_class($exception->getPrevious()) == UnauthorizedException::class) {
-                    return $response->withStatus(403);
+                    return $response->withJson([
+                        'error_code' => 'ACCESS_DENIED',
+                        'error_message' => 'You have no access to perform this operation',
+                    ], 403);
                 }
                 
-                return $response->withStatus(500)
-                                ->withHeader('Content-Type', 'text/html')
-                                ->write('Something went wrong!');
+                if (get_class($exception->getPrevious()) == InvalidArgumentException::class) {
+                    /** @var InvalidArgumentException $e */
+                    $e = $exception->getPrevious();
+                    
+                    return $response->withJson([
+                        'error_code' => 'INVALID_DATA',
+                        'error_message' => $e->getMessage(),
+                    ], 422);
+                }
+                
+                // Default response
+                return $response->withJson([
+                    'error_code' => 'SERVER_ERROR',
+                    'error_message' => 'Something went wrong',
+                ], 500);
             };
         };
     }
@@ -170,9 +186,9 @@ final class SlimFactory
             
             $this->delete('/{note_id:[0-9a-zA-Z-]+}',
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
-    
-                    $note_id    = new Identity($args['note_id']);
-                    $command    = new DeleteNote($note_id);
+                    
+                    $note_id = new Identity($args['note_id']);
+                    $command = new DeleteNote($note_id);
                     command_bus()->dispatch($command);
                     
                     return $response->withStatus(200)->write('ok');

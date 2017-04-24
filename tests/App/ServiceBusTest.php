@@ -28,7 +28,7 @@ final class ServiceBusTest extends BaseTest
         $this->setAuthenticatedUser(new Identity());
         
         // 1. command
-        $command = new PostNewNote(new NoteText(""), new Identity(), new Identity());
+        $command = new PostNewNote(new NoteText("any"), new Identity(), new Identity());
         
         // 2. handle command directly (will involve authorizer)
         command_bus()->dispatch($command);

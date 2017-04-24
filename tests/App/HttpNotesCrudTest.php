@@ -112,6 +112,24 @@ final class HttpNotesCrudTest extends BaseTest
         $this->assertEquals(1, container()->get(NoteCollection::class)->all()->count());
     }
     
+    function test_unable_to_add_empty_note()
+    {
+        // seed
+        $me = new Identity();
+        $this->setAuthenticatedUser($me);
+        $this->assertEquals(0, container()->get(NoteCollection::class)->all()->count());
+        
+        // send request
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes');
+        $request  = $this->getRequest("post", $path, ['text' => ''], $me);
+        $response = $this->sendHttpRequest($request, $app);
+        
+        $this->assertEquals(422, $response->getStatusCode());
+        $json_response = json_decode((string)$response->getBody(), true);
+        $this->assertEquals("INVALID_DATA", $json_response['error_code']);
+    }
+    
     function test_update_note()
     {
         // seed
