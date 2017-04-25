@@ -8,7 +8,7 @@ use EMA\Domain\Foundation\VO\Identity;
 
 class PostNewNoteAuthorizer extends Authorizer
 {
-    public function denied(Identity $user_id, $command): bool
+    public function denied(Identity $user_id=null, $command): bool
     {
         return false;
     }

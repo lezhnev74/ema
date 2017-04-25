@@ -2,9 +2,13 @@
 
 
 use function DI\object;
-use EMA\App\Query\Note\NoteFinder;
+use EMA\App\Account\Model\Collection\AccountCollection;
+use EMA\App\Account\Model\Collection\InMemoryAccountCollection;
+use EMA\App\Account\Query\AccountFinder;
+use EMA\App\Note\Query\NoteFinder;
 use EMA\Domain\Note\Model\Collection\InMemoryNoteCollection;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
+use EMA\Infrastructure\Account\Finder\InMemoryAccountFinder;
 use EMA\Infrastructure\Note\Finder\InMemoryNoteFinder;
 
 return [
@@ -14,6 +18,8 @@ return [
     //
     
     NoteFinder::class => object(InMemoryNoteFinder::class),
+    AccountCollection::class => object(InMemoryAccountCollection::class),
+    AccountFinder::class => object(InMemoryAccountFinder::class),
     
     //Prooph\ServiceBus\Plugin\Guard\AuthorizationService::class => object(\EMA\App\Authorization\AuthorizationService::class),
     

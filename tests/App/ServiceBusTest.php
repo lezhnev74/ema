@@ -62,11 +62,4 @@ final class ServiceBusTest extends BaseTest
         
     }
     
-    function test_throw_exception_if_no_authenticated_user_set()
-    {
-        $this->expectException(AuthenticatedUserNotFound::class);
-        
-        container()->get(AuthorizationService::class);
-        
-    }
 }

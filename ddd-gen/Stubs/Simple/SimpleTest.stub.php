@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace /*<BASE_TEST_NAMESPACE>*/\/*<PSR4_NAMESPACE>*/;
 
-use EMA\Tests\BaseTest;use PHPUnit\Framework\TestCase;
+use EMA\Tests\BaseTest;
 
 class /*<FILENAME>*/ extends BaseTest {
     

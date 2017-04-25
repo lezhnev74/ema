@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace EMA\Tests\App;
 
+use EMA\App\Account\Query\FindAccount\FindAccount;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Domain\Note\Model\Note;
@@ -23,6 +24,34 @@ final class HttpNotesCrudTest extends BaseTest
         $this->restartContainer();
     }
     
+    function test_user_can_signup_with_google()
+    {
+        $client_mock = $this->getMockBuilder(\Google_Client::class)
+                            ->setMethods([
+                                'verifyIdToken',
+                                'fetchAccessTokenWithAuthCode',
+                                'getAccessToken',
+                            ])->getMock();
+        
+        $client_mock->method('fetchAccessTokenWithAuthCode')->willReturn(true);
+        $client_mock->method('verifyIdToken')->willReturn(['sub' => 'some_id']);
+        $client_mock->method('getAccessToken')->willReturn(['sub' => 'some_id']);
+        
+        container()->set(\Google_Client::class, $client_mock);
+    
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.google.callback');
+        $request  = $this->getRequest("get", $path, ['code' => 'some_code']);
+        $response = $this->sendHttpRequest($request, $app);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        
+        // Make sure this user has created
+        $this->setAuthorizationAs(true);
+        $account = query_bus_sync_dispatch(new FindAccount('google', 'some_id'));
+        $this->assertNotEquals(count($account), 0);
+        
+    }
     
     function test_get_my_notes()
     {

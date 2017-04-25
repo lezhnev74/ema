@@ -5,15 +5,17 @@ namespace EMA\App\Factory;
 
 use Assert\InvalidArgumentException;
 use Doctrine\Common\Collections\Collection;
+use EMA\App\Account\Command\AddAccount\AddAccount;
 use EMA\App\Http\Authentication\AuthenticationMiddleware;
-use EMA\App\Query\Note\AllNotes\AllNotes;
-use EMA\App\Query\Note\SearchNotes\SearchNotes;
+use EMA\App\Note\Query\AllNotes\AllNotes;
+use EMA\App\Note\Query\SearchNotes\SearchNotes;
 use EMA\Domain\Foundation\Exception\DomainProblem;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Commands\DeleteNote\DeleteNote;
 use EMA\Domain\Note\Commands\ModifyNote\ModifyNote;
 use EMA\Domain\Note\Commands\PostNewNote\PostNewNote;
 use EMA\Domain\Note\Model\VO\NoteText;
+use function GuzzleHttp\Psr7\parse_query;
 use Interop\Container\ContainerInterface;
 use Prooph\ServiceBus\Plugin\Guard\UnauthorizedException;
 use Psr\Http\Message\RequestInterface;
@@ -22,6 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Route;
 
 final class SlimFactory
 {
@@ -70,7 +73,7 @@ final class SlimFactory
                 // Default response
                 $response = $response->withJson([
                     'error_code' => 'SERVER_ERROR',
-                    'error_message' => 'Something went wrong',
+                    'error_message' => config('app.env') == 'production' ? 'Something went wrong' : $exception->getMessage(),
                 ], 500);
                 
                 
@@ -97,8 +100,17 @@ final class SlimFactory
                     ], 422);
                 };
                 
-                log_problem($exception->getPrevious()->getMessage(), [
-                    'trace' => $exception->getTraceAsString(),
+                
+                // Log trace string
+                $last_exception = $exception;
+                $trace_string   = $last_exception->getTraceAsString();
+                while ($last_exception = $last_exception->getPrevious()) {
+                    $trace_string .= "\n\n========== prev exception ========== \n\n";
+                    $trace_string .= $last_exception->getMessage() . "\n";
+                    $trace_string .= $last_exception->getTraceAsString();
+                };
+                log_problem(get_class($exception) . ": " . $exception->getMessage(), [
+                    'trace' => $trace_string,
                 ]);
                 
                 return $response;
@@ -122,15 +134,43 @@ final class SlimFactory
         //
         $app->group('/api/auth', function () {
             
+            
             $this->get('/callback/google',
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
-                
-                });
+                    
+                    // exchange google's code to google's access_token
+                    $query = parse_query($request->getUri()->getQuery());
+                    if (!isset($query['code'])) {
+                        throw new \Exception("Code was not found within this request");
+                    }
+                    
+                    
+                    $client = container()->get(\Google_Client::class);
+                    $client->setRedirectUri(
+                        config('app.base_url')
+                        . $this->get('router')->pathFor('api.google.callback')
+                    );
+                    $client->fetchAccessTokenWithAuthCode($query['code']);
+                    
+                    if (!$client->getAccessToken()) {
+                        throw new \Exception("Unable to exchange code to token");
+                    }
+                    
+                    // get account's unique_id
+                    // Ref: https://developers.google.com/api-client-library/php/guide/aaa_idtoken
+                    $payload = $client->verifyIdToken();
+                    if (!isset($payload['sub'])) {
+                        throw new \Exception("Google access_token has no 'sub' item");
+                    }
+                    
+                    // add new user
+                    $command = new AddAccount("google", $payload['sub']);
+                    command_bus()->dispatch($command);
+                    
+                    // exchange to the app's access_token
+                    
+                })->setName("api.google.callback");
             
-            $this->get('/callback/twitter',
-                function (RequestInterface $request, ResponseInterface $response, array $args) {
-                
-                });
             
         });
         

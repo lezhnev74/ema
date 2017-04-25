@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
 use EMA\Domain\Foundation\VO\Identity;
 
-final class DoctrineNoteFinder implements \EMA\App\Query\Note\NoteFinder
+final class DoctrineNoteFinder implements \EMA\App\Note\Query\NoteFinder
 {
     /** @var  Connection */
     private $connection;

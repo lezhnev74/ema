@@ -5,9 +5,12 @@ use function DI\factory;
 use function DI\get;
 use function DI\object;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use EMA\App\Account\Query\AccountFinder;
 use EMA\App\Factory\LogFactory;
 use EMA\App\Factory\SlimFactory;
-use EMA\App\Query\Note\NoteFinder;
+use EMA\App\Factory\SocialProvidersFactory;
+use EMA\App\Note\Query\NoteFinder;
+use EMA\Infrastructure\Account\Finder\DoctrineAccountFinder;
 use EMA\Infrastructure\Factory\DoctrineConnection;
 use EMA\Infrastructure\Note\Finder\DoctrineNoteFinder;
 use Interop\Container\ContainerInterface;
@@ -50,7 +53,9 @@ return [
     \Prooph\ServiceBus\QueryBus::class => factory(QueryBusFactory::class),
     
     App::class => factory(SlimFactory::class),
-    NoteFinder::class => object(DoctrineNoteFinder::class),
+    
+    
+    Google_Client::class => factory([SocialProvidersFactory::class, 'google']),
     
     
     //
@@ -61,5 +66,8 @@ return [
     \Doctrine\DBAL\Connection::class => factory([DoctrineConnection::class, 'default']),
     Configuration::class => factory([DoctrineConnection::class, 'migration_config']),
     Logger::class => factory(LogFactory::class),
+    
+    NoteFinder::class => object(DoctrineNoteFinder::class),
+    AccountFinder::class => object(DoctrineAccountFinder::class),
 ];
 

@@ -29,7 +29,7 @@ class ModifyNoteAuthorizer extends Authorizer
      *
      * @return bool
      */
-    public function denied(Identity $user_id, $command): bool
+    public function denied(Identity $user_id=null, $command): bool
     {
         
         $note = $this->collection->findById($command->getId());

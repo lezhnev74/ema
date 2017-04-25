@@ -26,10 +26,6 @@ final class AuthorizationService implements ProophAuthorizationService
     {
         $this->container                   = $container;
         $this->authenticated_user_identity = $authenticated_user_identity;
-        
-        if (is_null($authenticated_user_identity)) {
-            throw new AuthenticatedUserNotFound("Unable to detect authenticated user for authorization");
-        }
     }
     
     

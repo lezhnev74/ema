@@ -10,7 +10,7 @@ use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Domain\Note\Model\Note;
 
-final class InMemoryNoteFinder implements \EMA\App\Query\Note\NoteFinder
+final class InMemoryNoteFinder implements \EMA\App\Note\Query\NoteFinder
 {
     /** @var  NoteCollection */
     private $collection;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace EMA\Tests\Infrastructure\Query\SearchNotes;
 
 use function DI\object;
-use EMA\App\Query\Note\NoteFinder;
+use EMA\App\Note\Query\NoteFinder;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Infrastructure\Note\Collection\DoctrineNoteCollection;
 use EMA\Infrastructure\Note\Finder\DoctrineNoteFinder;
-use EMA\Tests\App\Query\Note\AllNotes\AllNotesHandlerTest;
-use EMA\Tests\App\Query\Note\SearchNotes\SearchNotesHandlerTest;
+use EMA\Tests\App\Note\Query\AllNotes\AllNotesHandlerTest;
+use EMA\Tests\App\Note\Query\SearchNotes\SearchNotesHandlerTest;
 
 final class DoctrineAllNotesTest extends AllNotesHandlerTest
 {
