@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace EMA\Tests\App;
 
+use Doctrine\DBAL\Connection;
 use EMA\App\Account\Query\FindAccount\FindAccount;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
@@ -15,7 +16,7 @@ use Slim\App;
 /**
  * Test http requests to CRUD oeprations
  */
-final class HttpNotesCrudTest extends BaseTest
+class HttpNotesCrudTest extends BaseTest
 {
     protected function setUp()
     {
@@ -38,7 +39,7 @@ final class HttpNotesCrudTest extends BaseTest
         $client_mock->method('getAccessToken')->willReturn(['sub' => 'some_id']);
         
         container()->set(\Google_Client::class, $client_mock);
-    
+        
         $app      = container()->get(App::class);
         $path     = $app->getContainer()->get('router')->pathFor('api.google.callback');
         $request  = $this->getRequest("get", $path, ['code' => 'some_code']);
@@ -47,9 +48,15 @@ final class HttpNotesCrudTest extends BaseTest
         $this->assertEquals(200, $response->getStatusCode());
         
         // Make sure this user has created
-        $this->setAuthorizationAs(true);
-        $account = query_bus_sync_dispatch(new FindAccount('google', 'some_id'));
-        $this->assertNotEquals(count($account), 0);
+        query_bus()->dispatch(new FindAccount('google', 'some_id'))->then(
+            function ($account) {
+                $this->assertNotEquals(count($account), 0);
+            },
+            function (\Throwable $e) {
+                $this->fail($e);
+            }
+        )->done();
+        
         
     }
     

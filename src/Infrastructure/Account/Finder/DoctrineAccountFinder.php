@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
 use EMA\App\Account\Model\Account\Account;
 use EMA\App\Account\Model\Collection\AccountCollection;
+use EMA\App\Account\Model\Collection\AccountNotFound;
 use EMA\App\Account\Query\AccountFinder;
 use EMA\Domain\Foundation\VO\Identity;
 
@@ -34,12 +35,17 @@ final class DoctrineAccountFinder implements AccountFinder
     
     public function findBySocialId(string $social_provider_name, string $social_provider_id): array
     {
-        $result = $this->connection->fetchAssoc(
-            "select * from accounts where social_provider_id=? AND social_provider_name=?", [
+        $statement = $this->connection->executeQuery(
+            "select * from accounts where `social_provider_id`=? AND `social_provider_name`=?", [
                 $social_provider_id,
                 $social_provider_name,
             ]
         );
+        $result    = $statement->fetch();
+        
+        if (!$result) {
+            throw new AccountNotFound();
+        }
         
         return $result;
         

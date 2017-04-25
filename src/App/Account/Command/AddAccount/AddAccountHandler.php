@@ -7,6 +7,7 @@ use Assert\Assert;
 use EMA\App\Account\Model\Account\Account;
 use EMA\App\Account\Model\Collection\AccountCollection;
 use EMA\App\Account\Model\Collection\AccountNotFound;
+use EMA\App\Account\Query\FindAccount\FindAccount;
 use EMA\Domain\Foundation\VO\Identity;
 
 class AddAccountHandler
@@ -26,10 +27,14 @@ class AddAccountHandler
     function __invoke(AddAccount $command)
     {
         try {
-            $existing_account = $this->collection->findFromSocialKey(
-                $command->getSocialProviderName(),
-                $command->getSocialProviderId()
-            );
+            
+            query_bus_sync_dispatch(
+                new FindAccount(
+                    $command->getSocialProviderName(),
+                    $command->getSocialProviderId()
+                ));
+            
+            
         } catch (AccountNotFound $e) {
             $this->collection->save(
                 new Account(

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
 use EMA\App\Account\Model\Account\Account;
 use EMA\App\Account\Model\Collection\AccountCollection;
+use EMA\App\Account\Model\Collection\AccountNotFound;
 use EMA\App\Account\Query\AccountFinder;
 use EMA\Domain\Foundation\VO\Identity;
 
@@ -44,7 +45,7 @@ final class InMemoryAccountFinder implements AccountFinder
             }
         }
         
-        return [];
+        throw new AccountNotFound();
     }
     
     
