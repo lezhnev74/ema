@@ -227,7 +227,6 @@ final class SlimFactory
             $this->get('/search/{query}',
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
                     
-                    throw new BadToken();
                     // Query all available notes
                     $query = new SearchNotes(current_authenticated_user_id(), $args['query']);
                     /** @var Collection $result */
