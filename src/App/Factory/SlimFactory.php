@@ -60,6 +60,16 @@ final class SlimFactory
             return $next($request, $response);
         });
         
+        $app->add(function ($req, $res, $next) {
+            $response = $next($req, $res);
+            
+            return $response
+                ->withHeader('Access-Control-Allow-Origin', '*')
+                ->withHeader('Access-Control-Allow-Headers',
+                    'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        });
+        
         return $app;
     }
     
@@ -149,9 +159,10 @@ final class SlimFactory
                     
                     $client = container()->get(\Google_Client::class);
                     $client->setRedirectUri($query['redirect_uri']);
-                    $client->fetchAccessTokenWithAuthCode($query['code']);
+                    $answer = $client->fetchAccessTokenWithAuthCode($query['code']);
                     
                     if (!$client->getAccessToken()) {
+                        log_problem("Gogle wasnt able to exchange auth code to token", $answer);
                         throw new \Exception("Unable to exchange code to token");
                     }
                     

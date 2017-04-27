@@ -5,11 +5,13 @@ use function DI\factory;
 use function DI\get;
 use function DI\object;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use EMA\App\Account\Model\Collection\AccountCollection;
 use EMA\App\Account\Query\AccountFinder;
 use EMA\App\Factory\LogFactory;
 use EMA\App\Factory\SlimFactory;
 use EMA\App\Factory\SocialProvidersFactory;
 use EMA\App\Note\Query\NoteFinder;
+use EMA\Infrastructure\Account\Collection\DoctrineAccountCollection;
 use EMA\Infrastructure\Account\Finder\DoctrineAccountFinder;
 use EMA\Infrastructure\Factory\DoctrineConnection;
 use EMA\Infrastructure\Note\Finder\DoctrineNoteFinder;
@@ -56,6 +58,7 @@ return [
     
     
     Google_Client::class => factory([SocialProvidersFactory::class, 'google']),
+    AccountCollection::class => object(DoctrineAccountCollection::class),
     
     
     //
@@ -69,5 +72,6 @@ return [
     
     NoteFinder::class => object(DoctrineNoteFinder::class),
     AccountFinder::class => object(DoctrineAccountFinder::class),
+
 ];
 

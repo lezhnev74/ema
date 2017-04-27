@@ -30,7 +30,8 @@
         "lcobucci/jwt": "^3.2",
         "react/promise": "^2.5",
         "monolog/monolog": "^1.22",
-        "google/apiclient": "^2.1"
+        "google/apiclient": "^2.1",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "autoload": {
         "psr-4": {
