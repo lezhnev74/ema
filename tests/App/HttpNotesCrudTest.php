@@ -40,12 +40,14 @@ class HttpNotesCrudTest extends BaseTest
         
         container()->set(\Google_Client::class, $client_mock);
         
-        $app      = container()->get(App::class);
-        $path     = $app->getContainer()->get('router')->pathFor('api.google.callback');
-        $request  = $this->getRequest("get", $path, ['code' => 'some_code']);
-        $response = $this->sendHttpRequest($request, $app);
+        $app           = container()->get(App::class);
+        $path          = $app->getContainer()->get('router')->pathFor('api.google.callback');
+        $request       = $this->getRequest("get", $path, ['code' => 'some_code']);
+        $response      = $this->sendHttpRequest($request, $app);
+        $json_response = json_decode((string)$response->getBody(), true);
         
         $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue(isset($json_response['access_token']));
         
         // Make sure this user has created
         query_bus()->dispatch(new FindAccount('google', 'some_id'))->then(

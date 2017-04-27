@@ -7,6 +7,7 @@ use Assert\InvalidArgumentException;
 use Doctrine\Common\Collections\Collection;
 use EMA\App\Account\Command\AddAccount\AddAccount;
 use EMA\App\Http\Authentication\AuthenticationMiddleware;
+use EMA\App\Http\Authentication\JWT;
 use EMA\App\Note\Query\AllNotes\AllNotes;
 use EMA\App\Note\Query\SearchNotes\SearchNotes;
 use EMA\Domain\Foundation\Exception\DomainProblem;
@@ -164,10 +165,15 @@ final class SlimFactory
                     }
                     
                     // add new user
-                    $command = new AddAccount("google", $payload['sub']);
+                    $account_id = new Identity();
+                    $command    = new AddAccount("google", $payload['sub'], $account_id);
                     command_bus()->dispatch($command);
                     
                     // exchange to the app's access_token
+                    $jwt   = new JWT();
+                    $token = $jwt->makeToken($account_id);
+                    
+                    return $response->withJson(['access_token' => $token], 200);
                     
                 })->setName("api.google.callback");
             

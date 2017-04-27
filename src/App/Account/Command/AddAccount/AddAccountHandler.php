@@ -38,7 +38,7 @@ class AddAccountHandler
         } catch (AccountNotFound $e) {
             $this->collection->save(
                 new Account(
-                    new Identity(),
+                    $command->getAccountId(),
                     $command->getSocialProviderName(),
                     $command->getSocialProviderId()
                 )

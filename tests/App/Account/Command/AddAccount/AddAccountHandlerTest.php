@@ -25,7 +25,7 @@ class AddAccountHandlerTest extends BaseTest
         $social_provider = 'google';
         $google_key      = "google_id_123";
         
-        $command = new AddAccount($social_provider, $google_key);
+        $command = new AddAccount($social_provider, $google_key, new Identity());
         $handler = container()->get(AddAccountHandler::class);
         $handler->__invoke($command);
         
