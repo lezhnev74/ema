@@ -7,6 +7,7 @@ use Assert\InvalidArgumentException;
 use Doctrine\Common\Collections\Collection;
 use EMA\App\Account\Command\AddAccount\AddAccount;
 use EMA\App\Http\Authentication\AuthenticationMiddleware;
+use EMA\App\Http\Authentication\BadToken;
 use EMA\App\Http\Authentication\JWT;
 use EMA\App\Note\Query\AllNotes\AllNotes;
 use EMA\App\Note\Query\SearchNotes\SearchNotes;
@@ -92,6 +93,11 @@ final class SlimFactory
                     $response = $response->withJson([
                         'error_code' => 'ACCESS_DENIED',
                         'error_message' => 'You have no access to perform this operation',
+                    ], 403);
+                } elseif (get_class($exception->getPrevious()) == BadToken::class) {
+                    $response = $response->withJson([
+                        'error_code' => 'BAD_TOKEN',
+                        'error_message' => 'You have problem with your token',
                     ], 403);
                 } elseif (get_class($exception->getPrevious()) == InvalidArgumentException::class) {
                     /** @var InvalidArgumentException $e */
@@ -220,6 +226,11 @@ final class SlimFactory
                     $result = query_bus_sync_dispatch($query);
                     
                     $response = $response->withJson(array_values($result->toArray()), 200);
+                    
+                    log_info("Search", [
+                        'query' => $args['query'],
+                        'found_results' => count($result->toArray()),
+                    ]);
                     
                     return $response;
                     

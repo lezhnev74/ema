@@ -27,8 +27,8 @@ final class AuthenticationMiddleware
                 
                 // is it a valid token?
                 $jwt = new JWT();
-    
                 $id = $jwt->parseToken($token);
+                
                 container()->set('authenticated_user_identity', $id); // authenticate user
                 
             }
