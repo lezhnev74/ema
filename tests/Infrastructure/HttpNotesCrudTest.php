@@ -53,7 +53,7 @@ final class HttpNotesCrudTest extends \EMA\Tests\App\HttpNotesCrudTest
         container()->set(\Google_Client::class, $client_mock);
         
         $app      = container()->get(App::class);
-        $path     = $app->getContainer()->get('router')->pathFor('api.google.callback');
+        $path     = $app->getContainer()->get('router')->pathFor('api.google.exchange');
         $request  = $this->getRequest("get", $path, ['code' => 'some_code']);
         $response = $this->sendHttpRequest($request, $app);
         

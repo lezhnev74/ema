@@ -136,7 +136,8 @@ final class SlimFactory
         $app->group('/api/auth', function () {
             
             
-            $this->get('/callback/google',
+            // Exchange auth_code from google to app's access_token
+            $this->get('/exchange/google',
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
                     
                     // exchange google's code to google's access_token
@@ -147,10 +148,7 @@ final class SlimFactory
                     
                     
                     $client = container()->get(\Google_Client::class);
-                    $client->setRedirectUri(
-                        config('app.base_url')
-                        . $this->get('router')->pathFor('api.google.callback')
-                    );
+                    $client->setRedirectUri($query['redirect_uri']);
                     $client->fetchAccessTokenWithAuthCode($query['code']);
                     
                     if (!$client->getAccessToken()) {
@@ -175,7 +173,7 @@ final class SlimFactory
                     
                     return $response->withJson(['access_token' => $token], 200);
                     
-                })->setName("api.google.callback");
+                })->setName("api.google.exchange");
             
             
         });
