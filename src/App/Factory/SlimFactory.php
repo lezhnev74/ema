@@ -82,19 +82,12 @@ final class SlimFactory
             return function (ServerRequestInterface $request, ResponseInterface $response, \Throwable $exception) use (
                 $c
             ) {
-                // Default response
-                $response = $response->withJson([
-                    'error_code' => 'SERVER_ERROR',
-                    'error_message' => config('app.env') == 'production' ? 'Something went wrong' : $exception->getMessage(),
-                ], 500);
-                
-                
                 if (get_class($exception->getPrevious()) == UnauthorizedException::class) {
                     $response = $response->withJson([
                         'error_code' => 'ACCESS_DENIED',
                         'error_message' => 'You have no access to perform this operation',
                     ], 403);
-                } elseif (get_class($exception->getPrevious()) == BadToken::class) {
+                } elseif (get_class($exception) == BadToken::class) {
                     $response = $response->withJson([
                         'error_code' => 'BAD_TOKEN',
                         'error_message' => 'You have problem with your token',
@@ -115,8 +108,12 @@ final class SlimFactory
                         'error_code' => $e->getProblemCode(),
                         'error_message' => $e->getMessage(),
                     ], 422);
-                };
-                
+                } else {
+                    $response = $response->withJson([
+                        'error_code' => 'SERVER_ERROR',
+                        'error_message' => config('app.env') == 'production' ? 'Something went wrong' : $exception->getMessage(),
+                    ], 500);
+                }
                 
                 // Log trace string
                 $last_exception = $exception;
@@ -126,9 +123,19 @@ final class SlimFactory
                     $trace_string .= $last_exception->getMessage() . "\n";
                     $trace_string .= $last_exception->getTraceAsString();
                 };
-                log_problem(get_class($exception) . ": " . $exception->getMessage(), [
-                    'trace' => $trace_string,
-                ]);
+                log_problem(get_class($exception) . ": " . $exception->getMessage() . " at " . $exception->getFile() . ":" . $exception->getLine(),
+                    [
+                        'trace' => $trace_string,
+                    ]);
+                
+                log_info('error handler response', ['r' => $response]);
+                
+                // Why middlewares are skipped when error is thrown?
+                // Ref: https://github.com/slimphp/Slim/issues/2041#issuecomment-280632767
+                $response = $response->withHeader('Access-Control-Allow-Origin', '*')
+                                     ->withHeader('Access-Control-Allow-Headers',
+                                         'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+                                     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
                 
                 return $response;
             };
@@ -220,6 +227,7 @@ final class SlimFactory
             $this->get('/search/{query}',
                 function (RequestInterface $request, ResponseInterface $response, array $args) {
                     
+                    throw new BadToken();
                     // Query all available notes
                     $query = new SearchNotes(current_authenticated_user_id(), $args['query']);
                     /** @var Collection $result */
