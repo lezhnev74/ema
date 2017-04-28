@@ -37,13 +37,13 @@ final class DoctrineNoteFinder implements \EMA\App\Note\Query\NoteFinder
                 "%" . $query . "%",
             ]
         );
-        //log_info("sql serach", [
-        //    'sql' => "select * from notes where owner_id=? AND `note_text` LIKE ?",
-        //    'binds' => [
-        //        $ownerId->getAsString(),
-        //        "%" . $query . "%",
-        //    ],
-        //]);
+        log_info("sql search", [
+            'sql' => "select * from notes where owner_id=? AND `note_text` LIKE ?",
+            'binds' => [
+                $ownerId->getAsString(),
+                "%" . $query . "%",
+            ],
+        ]);
         $collection = new ArrayCollection($result);
         
         return $collection;

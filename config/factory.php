@@ -11,9 +11,11 @@ use EMA\App\Factory\LogFactory;
 use EMA\App\Factory\SlimFactory;
 use EMA\App\Factory\SocialProvidersFactory;
 use EMA\App\Note\Query\NoteFinder;
+use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Infrastructure\Account\Collection\DoctrineAccountCollection;
 use EMA\Infrastructure\Account\Finder\DoctrineAccountFinder;
 use EMA\Infrastructure\Factory\DoctrineConnection;
+use EMA\Infrastructure\Note\Collection\DoctrineNoteCollection;
 use EMA\Infrastructure\Note\Finder\DoctrineNoteFinder;
 use Interop\Container\ContainerInterface;
 use Monolog\Logger;
@@ -71,6 +73,7 @@ return [
     Logger::class => factory(LogFactory::class),
     
     NoteFinder::class => object(DoctrineNoteFinder::class),
+    NoteCollection::class => object(DoctrineNoteCollection::class),
     AccountFinder::class => object(DoctrineAccountFinder::class),
 
 ];

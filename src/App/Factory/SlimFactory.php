@@ -6,6 +6,7 @@ namespace EMA\App\Factory;
 use Assert\InvalidArgumentException;
 use Doctrine\Common\Collections\Collection;
 use EMA\App\Account\Command\AddAccount\AddAccount;
+use EMA\App\Account\Query\FindAccount\FindAccount;
 use EMA\App\Http\Authentication\AuthenticationMiddleware;
 use EMA\App\Http\Authentication\BadToken;
 use EMA\App\Http\Authentication\JWT;
@@ -187,13 +188,19 @@ final class SlimFactory
                     }
                     
                     // add new user
-                    $account_id = new Identity();
-                    $command    = new AddAccount("google", $payload['sub'], $account_id);
+                    
+                    $command = new AddAccount("google", $payload['sub']);
                     command_bus()->dispatch($command);
+                    
+                    // now find the account by this credentials
+                    $account = query_bus_sync_dispatch(new FindAccount(
+                        $command->getSocialProviderName(),
+                        $command->getSocialProviderId()
+                    ));
                     
                     // exchange to the app's access_token
                     $jwt   = new JWT();
-                    $token = $jwt->makeToken($account_id);
+                    $token = $jwt->makeToken(new Identity($account['id']));
                     
                     return $response->withJson(['access_token' => $token], 200);
                     
@@ -253,7 +260,7 @@ final class SlimFactory
                 $command    = new PostNewNote($text, $id, $owner_id);
                 command_bus()->dispatch($command);
                 
-                return $response->withStatus(200)->write('ok');
+                return $response->withJson(['note_id' => $id->getAsString()]);
             })->setName('api.notes.add');
             
             
@@ -266,7 +273,7 @@ final class SlimFactory
                     $command    = new ModifyNote($text, $note_id);
                     command_bus()->dispatch($command);
                     
-                    return $response->withStatus(200)->write('ok');
+                    return $response->withJson(['note_id' => $args['note_id']]);
                 })->setName('api.notes.update');
             
             
@@ -277,7 +284,7 @@ final class SlimFactory
                     $command = new DeleteNote($note_id);
                     command_bus()->dispatch($command);
                     
-                    return $response->withStatus(200)->write('ok');
+                    return $response->withJson(['note_id' => $args['note_id']]);
                     
                 })->setName('api.notes.delete');
             
