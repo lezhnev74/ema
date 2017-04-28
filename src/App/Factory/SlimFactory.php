@@ -11,6 +11,7 @@ use EMA\App\Http\Authentication\AuthenticationMiddleware;
 use EMA\App\Http\Authentication\BadToken;
 use EMA\App\Http\Authentication\JWT;
 use EMA\App\Note\Query\AllNotes\AllNotes;
+use EMA\App\Note\Query\RecentNotes\RecentNotes;
 use EMA\App\Note\Query\SearchNotes\SearchNotes;
 use EMA\Domain\Foundation\Exception\DomainProblem;
 use EMA\Domain\Foundation\VO\Identity;
@@ -229,6 +230,21 @@ final class SlimFactory
                 return $response;
                 
             })->setName('api.notes');
+            
+            $this->get('/recent', function (ServerRequestInterface $request, ResponseInterface $response, array $args) {
+                
+                // User can set how many recent item he wants to get
+                $count = abs(intval($request->getQueryParams()['count']));
+                if (!$count) {
+                    $count = 10;
+                }
+                
+                $query    = new RecentNotes(current_authenticated_user_id(), $count);
+                $result   = query_bus_sync_dispatch($query);
+                $response = $response->withJson($result->toArray(), 200);
+    
+                return $response;
+            })->setName('api.notes.recent');
             
             
             $this->get('/search/{query}',

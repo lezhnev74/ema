@@ -13,4 +13,6 @@ interface NoteFinder
     public function all(): Collection;
     
     public function search(string $query, Identity $ownerId): Collection;
+    
+    public function recent(int $count, Identity $ownerId): Collection;
 }

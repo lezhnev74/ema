@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace EMA\Tests\App;
 
+use Carbon\Carbon;
 use Doctrine\DBAL\Connection;
 use EMA\App\Account\Query\FindAccount\FindAccount;
+use EMA\App\Note\Query\NoteFinder;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Domain\Note\Model\Note;
@@ -81,6 +83,38 @@ class HttpNotesCrudTest extends BaseTest
         $this->assertEquals(200, $response->getStatusCode());
         $json_response = json_decode((string)$response->getBody(), true);
         $this->assertEquals(2, count($json_response));
+        
+    }
+    
+    function test_get_recent_notes()
+    {
+        
+        // seed
+        $me     = new Identity();
+        $not_me = new Identity();
+        
+        $note1 = new Note(new Identity(), new NoteText("1"), $me, null, Carbon::parse('01.01.2017 00:00:00'));
+        $note2 = new Note(new Identity(), new NoteText("2"), $me, null, Carbon::parse('01.01.2017 00:00:01'));
+        $note3 = new Note(new Identity(), new NoteText("3"), $me, null, Carbon::parse('01.01.2017 00:00:02'));
+        $note4 = new Note(new Identity(), new NoteText("4"), $not_me, null, Carbon::parse('01.01.2017 00:00:02'));
+        
+        container()->get(NoteCollection::class)->save($note1);
+        container()->get(NoteCollection::class)->save($note2);
+        container()->get(NoteCollection::class)->save($note3);
+        container()->get(NoteCollection::class)->save($note4);
+        
+        // get 2 my recent notes
+        $app      = container()->get(App::class);
+        $path     = $app->getContainer()->get('router')->pathFor('api.notes.recent');
+        $request  = $this->getRequest("get", $path . "?count=2", [], $me);
+        $response = $this->sendHttpRequest($request, $app);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        $json_response = json_decode((string)$response->getBody(), true);
+        $this->assertEquals(2, count($json_response));
+        
+        $this->assertEquals($note3->getId()->getAsString(), $json_response[0]['id']);
+        $this->assertEquals($note2->getId()->getAsString(), $json_response[1]['id']);
         
     }
     

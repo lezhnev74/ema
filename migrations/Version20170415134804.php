@@ -20,6 +20,8 @@ class Version20170415134804 extends AbstractMigration
                                 id varchar(36) NOT NULL,
                                 owner_id varchar(36) NOT NULL,
                                 note_text text NOT NULL,
+                                posted_at int(11) NOT NULL,
+                                modified_at int(11) DEFAULT NULL,
                                 PRIMARY KEY(id)
                             )
         ");

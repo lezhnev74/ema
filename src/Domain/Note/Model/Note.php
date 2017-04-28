@@ -29,12 +29,17 @@ final class Note extends AggregateRoot
      * @param NoteText $text
      * @param Identity $owner_id
      */
-    public function __construct(Identity $id, NoteText $text, Identity $owner_id)
-    {
+    public function __construct(
+        Identity $id,
+        NoteText $text,
+        Identity $owner_id,
+        Carbon $modified_at = null,
+        Carbon $posted_at = null
+    ) {
         $this->id          = $id;
         $this->text        = $text;
-        $this->posted_at   = Carbon::now();
-        $this->modified_at = null;
+        $this->posted_at   = $posted_at ?? Carbon::now();
+        $this->modified_at = $modified_at;
         $this->owner_id    = $owner_id;
     }
     

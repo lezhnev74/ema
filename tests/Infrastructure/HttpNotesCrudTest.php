@@ -8,6 +8,7 @@ use Doctrine\DBAL\Connection;
 use EMA\App\Account\Model\Collection\AccountCollection;
 use EMA\App\Account\Query\AccountFinder;
 use EMA\App\Account\Query\FindAccount\FindAccount;
+use EMA\App\Note\Query\NoteFinder;
 use EMA\Domain\Foundation\VO\Identity;
 use EMA\Domain\Note\Model\Collection\NoteCollection;
 use EMA\Domain\Note\Model\Note;
@@ -15,6 +16,7 @@ use EMA\Domain\Note\Model\VO\NoteText;
 use EMA\Infrastructure\Account\Collection\DoctrineAccountCollection;
 use EMA\Infrastructure\Account\Finder\DoctrineAccountFinder;
 use EMA\Infrastructure\Note\Collection\DoctrineNoteCollection;
+use EMA\Infrastructure\Note\Finder\DoctrineNoteFinder;
 use EMA\Tests\BaseTest;
 use Slim\App;
 
@@ -32,6 +34,7 @@ final class HttpNotesCrudTest extends \EMA\Tests\App\HttpNotesCrudTest
         
         
         container()->set(NoteCollection::class, object(DoctrineNoteCollection::class));
+        container()->set(NoteFinder::class, object(DoctrineNoteFinder::class));
         container()->set(AccountFinder::class, object(DoctrineAccountFinder::class));
         container()->set(AccountCollection::class, object(DoctrineAccountCollection::class));
     }

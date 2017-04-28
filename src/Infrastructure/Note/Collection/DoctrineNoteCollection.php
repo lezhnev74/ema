@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace EMA\Infrastructure\Note\Collection;
 
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
@@ -56,11 +57,14 @@ final class DoctrineNoteCollection implements NoteCollection
             $statement = $this->connection->prepare($sql);
             $statement->bindValue(1, $note->getText()->getText());
         } catch (ModelNotFound $e) {
-            $sql       = "INSERT into notes(id, note_text, owner_id) VALUES(:id, :text, :owner_id)";
+            $sql       = "INSERT into notes(id, note_text, owner_id, posted_at, modified_at)
+                                    VALUES(:id, :text, :owner_id, :posted_at, :modified_at)";
             $statement = $this->connection->prepare($sql);
             $statement->bindValue(1, $note->getId()->getAsString());
             $statement->bindValue(2, $note->getText()->getText());
             $statement->bindValue(3, $note->getOwnerId()->getAsString());
+            $statement->bindValue(4, $note->getPostedAt()->timestamp);
+            $statement->bindValue(5, $note->getModifiedAt()->timestamp);
         }
         
         
@@ -88,7 +92,9 @@ final class DoctrineNoteCollection implements NoteCollection
         return new Note(
             new Identity($item['id']),
             new NoteText($item['note_text']),
-            new Identity($item['owner_id'])
+            new Identity($item['owner_id']),
+            isset($item['modified_at']) ? Carbon::createFromTimestamp($item['modified_at']) : null,
+            Carbon::createFromTimestamp($item['posted_at'])
         );
     }
 }
