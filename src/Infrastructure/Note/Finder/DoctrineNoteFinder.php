@@ -52,7 +52,7 @@ final class DoctrineNoteFinder implements \EMA\App\Note\Query\NoteFinder
     public function recent(int $count, Identity $ownerId): Collection
     {
         $result     = $this->connection->fetchAll(
-            "select * from notes where owner_id=? order by posted_at DESC limit ?", [
+            "select * from notes where owner_id=? order by modified_at DESC limit ?", [
                 $ownerId->getAsString(),
                 $count,
             ]

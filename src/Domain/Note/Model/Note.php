@@ -39,7 +39,7 @@ final class Note extends AggregateRoot
         $this->id          = $id;
         $this->text        = $text;
         $this->posted_at   = $posted_at ?? Carbon::now();
-        $this->modified_at = $modified_at;
+        $this->modified_at = $modified_at ?? Carbon::now();
         $this->owner_id    = $owner_id;
     }
     

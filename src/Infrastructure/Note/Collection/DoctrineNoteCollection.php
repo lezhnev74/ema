@@ -53,10 +53,11 @@ final class DoctrineNoteCollection implements NoteCollection
         try {
             $this->findById($note->getId());
             
-            $sql       = "UPDATE notes SET note_text=? where id=?";
+            $sql       = "UPDATE notes SET note_text=?, modified_at=? where id=?";
             $statement = $this->connection->prepare($sql);
             $statement->bindValue(1, $note->getText()->getText());
-            $statement->bindValue(2, $note->getId()->getAsString());
+            $statement->bindValue(2, $note->getModifiedAt()->timestamp);
+            $statement->bindValue(3, $note->getId()->getAsString());
         } catch (ModelNotFound $e) {
             $sql       = "INSERT into notes(id, note_text, owner_id, posted_at, modified_at)
                                     VALUES(:id, :text, :owner_id, :posted_at, :modified_at)";
