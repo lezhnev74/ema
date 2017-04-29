@@ -208,20 +208,24 @@ class HttpNotesCrudTest extends BaseTest
         $me = new Identity();
         $this->setAuthenticatedUser($me);
         
-        $note_id = new Identity();
-        container()->get(NoteCollection::class)->save(new Note($note_id, new NoteText("text"), $me));
+        $note_id1 = new Identity();
+        $note_id2 = new Identity();
+        container()->get(NoteCollection::class)->save(new Note($note_id1, new NoteText("text1"), $me));
+        container()->get(NoteCollection::class)->save(new Note($note_id2, new NoteText("text2"), $me));
         
         // send request
         $app      = container()->get(App::class);
         $path     = $app->getContainer()->get('router')->pathFor('api.notes.update', [
-            'note_id' => $note_id->getAsString(),
+            'note_id' => $note_id1->getAsString(),
         ]);
-        $request  = $this->getRequest("post", $path, ["text" => "text2"], $me);
+        $request  = $this->getRequest("post", $path, ["text" => "text1_edited"], $me);
         $response = $this->sendHttpRequest($request, $app);
         
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(1, container()->get(NoteCollection::class)->all()->count());
-        $this->assertEquals("text2", container()->get(NoteCollection::class)->all()->first()->getText()->getText());
+        $this->assertEquals(2, container()->get(NoteCollection::class)->all()->count());
+        $this->assertEquals("text1_edited",
+            container()->get(NoteCollection::class)->all()->first()->getText()->getText());
+        $this->assertEquals("text2", container()->get(NoteCollection::class)->all()->get(1)->getText()->getText());
     }
     
     
