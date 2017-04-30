@@ -1,3 +1,6 @@
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/lezhnev74/ema/master/LICENSE)
+
+
 # Overview
 External memory app - allows one to quickly post and search text notes
 
