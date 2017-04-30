@@ -21,7 +21,13 @@ After opening the app page, one have few key options:
 First of all configure your database connection within `config/database.php`
 Then fill the database up:
 ```
+#requires php7.1-apcu module (for DI-container caching), see function `container()` in helpers file
 cd <project root>
+mkdir storage
+cp .env.example .env
+# then edit .env file
+composer update
+# then run database migrations
 php migrations/doctrine.php migrations:migrate
 ```
 
