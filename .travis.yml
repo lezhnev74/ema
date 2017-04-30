@@ -8,3 +8,4 @@ matrix:
 before_script:
   - composer self-update
   - composer update --prefer-source $DEPENDENCIES
+  - cp .env.example .env
