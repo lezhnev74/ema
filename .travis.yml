@@ -6,6 +6,7 @@ matrix:
     - php: 7.1
 
 before_script:
-  - composer self-update
-  - composer update --prefer-source $DEPENDENCIES
   - cp .env.example .env
+  - composer self-update
+  - composer update
+
