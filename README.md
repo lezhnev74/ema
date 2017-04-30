@@ -12,11 +12,11 @@ External memory app - allows one to quickly post and search text notes
 
 ## Why?
 
-* Evernote, disk files and other tools dissappointed me. I needed a light, fast post-n-search app for storing code snippets and linux commands.
- 
+
+* I needed something better than a todo app to practice Clean Architecture inspired by Uncle Bob's talks
+* Evernote, disk files (like Quiver app) and other tools disappointed me. I needed a light, fast post-n-search app for storing code snippets and linux commands. 
 * Secondly I needed a simple app to play with the DDD concepts along with Service Bus oriented architecture. All these things found its places in this project.  
 
-* I wanted to practice Clean Architecture inspired by Uncle Bob's talks
   
 ## Installation
 
