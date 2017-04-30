@@ -1,6 +1,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/lezhnev74/ema/master/LICENSE)
 [![Build Status](https://travis-ci.org/lezhnev74/ema.svg?branch=master)](https://travis-ci.org/lezhnev74/ema)
 [![Coverage Status](https://coveralls.io/repos/github/lezhnev74/ema/badge.svg?branch=master)](https://coveralls.io/github/lezhnev74/ema?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lezhnev74/ema/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lezhnev74/ema/?branch=master)
 
 # Overview
 External memory app - allows one to quickly post and search text notes
