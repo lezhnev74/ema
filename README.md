@@ -4,9 +4,10 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/lezhnev74/ema/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/lezhnev74/ema/?branch=master)
 
 # Overview
-External memory app - allows one to quickly post and search text notes
+External memory app - allows one to quickly post and search text notes.
+This repo represents the backend app - it offers http API for clients. 
 
-* Blog post: -
+* Blog post: https://lessthan12ms.com/clean-architecture-implemented-as-a-php-app/
 * Demo: https://ema.lessthan12ms.com
 * Client repo: https://github.com/lezhnev74/ema-web-client
 
