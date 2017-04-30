@@ -18,7 +18,7 @@ final class NoteTest extends BaseTest
 {
     function test_public_api()
     {
-        Carbon::setTestNow();
+        Carbon::setTestNow(Carbon::parse("01.01.2011 00:00:00"));
         
         $faker    = Factory::create();
         $id       = new Identity();
@@ -30,12 +30,12 @@ final class NoteTest extends BaseTest
         $this->assertTrue($owner_id->isEqual($note->getOwnerId()));
         $this->assertEquals($text, $note->getText());
         $this->assertEquals(Carbon::now(), $note->getPostedAt());
-        $this->assertNull($note->getModifiedAt());
+        $this->assertEquals(Carbon::now(), $note->getModifiedAt());
     }
     
     function test_it_fires_domain_events()
     {
-        Carbon::setTestNow();
+        Carbon::setTestNow(Carbon::parse("01.01.2011 00:00:00"));
         
         $faker    = Factory::create();
         $id       = new Identity();

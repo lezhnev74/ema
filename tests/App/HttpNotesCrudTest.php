@@ -88,15 +88,19 @@ class HttpNotesCrudTest extends BaseTest
     
     function test_get_recent_notes()
     {
-        
         // seed
         $me     = new Identity();
         $not_me = new Identity();
-        
-        $note1 = new Note(new Identity(), new NoteText("1"), $me, null, Carbon::parse('01.01.2017 00:00:00'));
-        $note2 = new Note(new Identity(), new NoteText("2"), $me, null, Carbon::parse('01.01.2017 00:00:01'));
-        $note3 = new Note(new Identity(), new NoteText("3"), $me, null, Carbon::parse('01.01.2017 00:00:02'));
-        $note4 = new Note(new Identity(), new NoteText("4"), $not_me, null, Carbon::parse('01.01.2017 00:00:02'));
+    
+        // imitate new notes every second
+        Carbon::setTestNow(Carbon::parse("01.01.2017 00:00:00"));
+        $note1 = new Note(new Identity(), new NoteText("1"), $me);
+        Carbon::setTestNow(Carbon::now()->addSecond());
+        $note2 = new Note(new Identity(), new NoteText("2"), $me);
+        Carbon::setTestNow(Carbon::now()->addSecond());
+        $note3 = new Note(new Identity(), new NoteText("3"), $me);
+        Carbon::setTestNow(Carbon::now()->addSecond());
+        $note4 = new Note(new Identity(), new NoteText("4"), $not_me);
         
         container()->get(NoteCollection::class)->save($note1);
         container()->get(NoteCollection::class)->save($note2);
