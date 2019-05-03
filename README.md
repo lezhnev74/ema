@@ -9,7 +9,7 @@ This repo represents the backend app - it offers http API for clients.
 
 * Blog post: https://lessthan12ms.com/clean-architecture-implemented-as-a-php-app/
 * Demo: https://ema.lessthan12ms.com
-* Client repo: https://github.com/lezhnev74/ema-web-client
+* UI/Client repo: https://github.com/lezhnev74/ema-web-client
 
 ![](ema.jpg)
 
