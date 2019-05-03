@@ -11,6 +11,8 @@ This repo represents the backend app - it offers http API for clients.
 * Demo: https://ema.lessthan12ms.com
 * Client repo: https://github.com/lezhnev74/ema-web-client
 
+![](ema.jpg)
+
 ## Why?
 
 
